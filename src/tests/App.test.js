@@ -1,11 +1,12 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Login from '../pages/Login';
+import renderWithRouter from '../renderWithRouter';
+import App from '../App';
 
 describe('Verifica se a Página de Login', () => {
   test(' possui o input de Email', () => {
-    render(<Login />);
+    const { history } = renderWithRouter(<App />);
     const inputEmail = screen.getByTestId('email-input');
     expect(inputEmail).toBeInTheDocument();
     const inputPassword = screen.getByTestId('password-input');
@@ -16,6 +17,7 @@ describe('Verifica se a Página de Login', () => {
     userEvent.type(inputEmail, 'test@test.com');
     userEvent.type(inputPassword, 'comidinhas');
     userEvent.click(inputBtn);
+    expect(history.location.pathname).toBe('/meals');
   });
 
   // test(' possui o input de Nome', () => {
