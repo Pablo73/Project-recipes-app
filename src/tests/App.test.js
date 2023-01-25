@@ -1,10 +1,28 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import App from '../App';
+import userEvent from '@testing-library/user-event';
+import Login from '../pages/Login';
 
-test('Farewell, front-end', () => {
-  // Este arquivo pode ser modificado ou deletado sem problemas
-  render(<App />);
-  const linkElement = screen.getByText(/TRYBE/i);
-  expect(linkElement).toBeInTheDocument();
+describe('Verifica se a Página de Login', () => {
+  test(' possui o input de Email', () => {
+    render(<Login />);
+    const inputEmail = screen.getByTestId('email-input');
+    expect(inputEmail).toBeInTheDocument();
+    const inputPassword = screen.getByTestId('password-input');
+    expect(inputPassword).toBeInTheDocument();
+    const inputBtn = screen.getByTestId('login-submit-btn');
+    expect(inputBtn).toBeInTheDocument();
+
+    userEvent.type(inputEmail, 'test@test.com');
+    userEvent.type(inputPassword, 'comidinhas');
+    userEvent.click(inputBtn);
+  });
+
+  // test(' possui o input de Nome', () => {
+  //   render(<Login />);
+  // });
+
+  // test(' possui um Botão de Play', () => {
+  //   render(<Login />);
+  // });
 });
