@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import rockGlass from '../images/rockGlass.svg';
 
 function Login({ history }) {
   const [email, setEmail] = useState('');
@@ -28,7 +29,15 @@ function Login({ history }) {
   };
 
   return (
-    <div>
+    <div className="meals">
+      <span className="logo">TRYBE</span>
+      <object
+        className="rocksGlass"
+        type="image/svg+xml"
+        data={ rockGlass }
+      >
+        Glass
+      </object>
       <input
         type="email"
         placeholder="Email"
