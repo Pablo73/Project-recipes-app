@@ -1,22 +1,55 @@
-function Login() {
+import { useState } from 'react';
+import PropTypes from 'prop-types';
+
+function Login({ history }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isDisabled, setDisabled] = useState(true);
+
+  const handleChange = (target, setState) => {
+    const { value } = target;
+    setState(value);
+    const six = 6;
+    const validation = (
+      /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+    );
+    const valiEmail = validation.test(email);
+    const valiPass = password.length >= six;
+    const valid = !valiEmail || !valiPass;
+    setDisabled(valid);
+  };
+
+  const userLogin = () => {
+    const userObj = { email };
+    const saveUserToLocalStorage = localStorage
+      .setItem('user', JSON.stringify(userObj));
+    history.push('/meals');
+    return saveUserToLocalStorage;
+  };
+
   return (
     <div>
       <input
         type="email"
         placeholder="Email"
-        // value={ email }
+        value={ email }
+        onChange={ ({ target }) => handleChange(target, setEmail) }
         data-testid="email-input"
       />
       <br />
       <input
         type="password"
         placeholder="Password"
+        value={ password }
+        onChange={ ({ target }) => handleChange(target, setPassword) }
         data-testid="password-input"
       />
       <br />
       <button
         type="button"
         data-testid="login-submit-btn"
+        onClick={ userLogin }
+        disabled={ isDisabled }
       >
         Enter
       </button>
@@ -25,3 +58,7 @@ function Login() {
 }
 
 export default Login;
+
+Login.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func }).isRequired,
+};
