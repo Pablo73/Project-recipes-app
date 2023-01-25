@@ -1,11 +1,15 @@
 import React from 'react';
-import HeaderSearchIcon from '../components/Header/HeaderSearchIcon';
+import Header from '../components/Header';
 
 function Drinks() {
   return (
     <div>
-      <h1 data-testid="page-title">Drinks</h1>
-      <HeaderSearchIcon />
+      <header>
+        <Header
+          title="Drinks"
+          withSearchIcon
+        />
+      </header>
     </div>
   );
 }
