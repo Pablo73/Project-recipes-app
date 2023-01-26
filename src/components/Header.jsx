@@ -3,6 +3,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
+import SearchBar from './SearchBar';
 
 function Header({ withSearchIcon, title }) {
   const history = useHistory();
@@ -37,12 +38,7 @@ function Header({ withSearchIcon, title }) {
           />
         </button>)}
       { search
-      && <input
-        data-testid="search-input"
-        name="search"
-        type="texto"
-        placeholder="Busca"
-      />}
+      && <SearchBar />}
     </header>
   );
 }
