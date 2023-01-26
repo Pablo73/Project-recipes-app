@@ -20,4 +20,19 @@ describe('Testando componente Hearder', () => {
 
     expect(history.location.pathname).toBe('/profile');
   });
+
+  test('Verifica input de busca', () => {
+    renderWithRouter(<Meals />);
+
+    const imgSearch = screen.getByRole('img', { name: /search icon/i });
+    expect(imgSearch).toBeInTheDocument();
+
+    userEvent.click(imgSearch);
+
+    const inputSearch = screen.getByTestId('search-input');
+    expect(inputSearch).toBeInTheDocument();
+
+    userEvent.click(imgSearch);
+    expect(inputSearch).not.toBeInTheDocument();
+  });
 });
