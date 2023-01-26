@@ -1,10 +1,14 @@
 import { useHistory } from 'react-router-dom';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 
 function Header({ withSearchIcon, title }) {
   const history = useHistory();
+  const [search, setSearch] = useState(false);
+
+  const toggleSearch = () => (search ? setSearch(false) : setSearch(true));
   return (
     <header>
       <div>
@@ -22,13 +26,23 @@ function Header({ withSearchIcon, title }) {
       </div>
       { withSearchIcon
       && (
-        <div>
+        <button
+          type="button"
+          onClick={ toggleSearch }
+        >
           <img
             src={ searchIcon }
             alt="Search icon"
             data-testid="search-top-btn"
           />
-        </div>)}
+        </button>)}
+      { search
+      && <input
+        data-testid="search-input"
+        name="search"
+        type="texto"
+        placeholder="Busca"
+      />}
     </header>
   );
 }
