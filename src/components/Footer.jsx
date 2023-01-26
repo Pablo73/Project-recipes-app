@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import DrinkIcon from '../images/drinkIcon.svg';
 import MealIcon from '../images/mealIcon.svg';
-import './Footer.css';
+import '../assets/css/Footer.css';
 
 function Footer() {
   const history = useHistory();
