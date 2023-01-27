@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import RecipesContext from './RecipesContext';
 
@@ -7,7 +7,7 @@ function RecipesProvider({ children }) {
   const [searchFood, setSearchFood] = useState([]);
   const location = useLocation();
 
-  const defineFetchApi = (searchType, searchTerm) => {
+  const defineFetchApi = useCallback((searchType, searchTerm) => {
     if (location.pathname.includes('meals')) {
       const mealsApi = {
         ingredient: `https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchTerm}`,
@@ -24,23 +24,23 @@ function RecipesProvider({ children }) {
       };
       return drinksApi[searchType];
     }
-  };
+  }, [location]);
 
-  const handleFetch = async (searchType, searchTerm) => {
+  const handleFetch = useCallback(async (searchType, searchTerm) => {
     try {
       const apiUrl = defineFetchApi(searchType, searchTerm);
       const responseFood = await fetch(apiUrl);
       const results = await responseFood.json();
       setSearchFood(results);
+      return searchFood;
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [searchFood, defineFetchApi]);
 
   const value = useMemo(() => ({
     handleFetch,
-    searchFood,
-  }), [searchFood]);
+  }), [handleFetch]);
 
   return (
     <RecipesContext.Provider value={ value }>
