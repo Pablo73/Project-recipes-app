@@ -43,11 +43,9 @@ function RecipesProvider({ children }) {
   }), [searchFood]);
 
   return (
-    <div>
-      <RecipesContext.Provider value={ value }>
-        { children }
-      </RecipesContext.Provider>
-    </div>
+    <RecipesContext.Provider value={ value }>
+      { children }
+    </RecipesContext.Provider>
   );
 }
 

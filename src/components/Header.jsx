@@ -29,6 +29,7 @@ function Header({ withSearchIcon, title }) {
       && (
         <button
           type="button"
+          data-testid="search-btn"
           onClick={ toggleSearch }
         >
           <img
