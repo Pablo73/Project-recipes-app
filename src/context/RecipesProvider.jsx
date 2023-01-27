@@ -31,7 +31,12 @@ function RecipesProvider({ children }) {
       const apiUrl = defineFetchApi(searchType, searchTerm);
       const responseFood = await fetch(apiUrl);
       const results = await responseFood.json();
-      setSearchFood(results);
+      if (location.pathname.includes('drinks')) {
+        setSearchFood(results.drinks);
+      }
+      if (location.pathname.includes('meals')) {
+        setSearchFood(results.meals);
+      }
       return searchFood;
     } catch (error) {
       console.log(error);
@@ -40,7 +45,8 @@ function RecipesProvider({ children }) {
 
   const value = useMemo(() => ({
     handleFetch,
-  }), [handleFetch]);
+    searchFood,
+  }), [handleFetch, searchFood]);
 
   return (
     <RecipesContext.Provider value={ value }>
