@@ -1,43 +1,51 @@
 import PropTypes from 'prop-types';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import RecipesContext from './RecipesContext';
 
 function RecipesProvider({ children }) {
   const [searchFood, setSearchFood] = useState([]);
+  const location = useLocation();
 
-  const handleFetch = async (searchType, searchTerm) => {
-    console.log(searchType);
-    const object = {
-      ingredient: `https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchTerm}`,
-      name: `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchTerm}`,
-      firstLetter: `https://www.themealdb.com/api/json/v1/1/search.php?f=${searchTerm}`,
-    };
+  const defineFetchApi = useCallback((searchType, searchTerm) => {
+    if (location.pathname.includes('meals')) {
+      const mealsApi = {
+        ingredient: `https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchTerm}`,
+        name: `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchTerm}`,
+        firstLetter: `https://www.themealdb.com/api/json/v1/1/search.php?f=${searchTerm}`,
+      };
+      return mealsApi[searchType];
+    }
+    if (location.pathname.includes('drinks')) {
+      const drinksApi = {
+        ingredient: `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchTerm}`,
+        name: `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchTerm}`,
+        firstLetter: `https://www.thecocktaildb.com/api/json/v1/1/search.php?f=${searchTerm}`,
+      };
+      return drinksApi[searchType];
+    }
+  }, [location]);
 
-    const handleSearch = object[searchType];
+  const handleFetch = useCallback(async (searchType, searchTerm) => {
+    try {
+      const apiUrl = defineFetchApi(searchType, searchTerm);
+      const responseFood = await fetch(apiUrl);
+      const results = await responseFood.json();
+      setSearchFood(results);
+      return searchFood;
+    } catch (error) {
+      console.log(error);
+    }
+  }, [searchFood, defineFetchApi]);
 
-    const responseFood = await fetch(handleSearch);
-
-    const results = await responseFood.json();
-
-    setSearchFood(results);
-    console.log(results);
-  };
-
-  // const contexValue = {
-  //   handleFetch,
-  //   searchFood,
-  // };
   const value = useMemo(() => ({
     handleFetch,
-    searchFood,
-  }), [searchFood]);
+  }), [handleFetch]);
 
   return (
-    <div>
-      <RecipesContext.Provider value={ value }>
-        { children }
-      </RecipesContext.Provider>
-    </div>
+    <RecipesContext.Provider value={ value }>
+      { children }
+    </RecipesContext.Provider>
   );
 }
 

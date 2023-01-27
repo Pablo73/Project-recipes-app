@@ -5,12 +5,10 @@ import Header from '../components/Header';
 function Meals() {
   return (
     <div>
-      <header>
-        <Header
-          title="Meals"
-          withSearchIcon
-        />
-      </header>
+      <Header
+        title="Meals"
+        withSearchIcon
+      />
       <Footer />
     </div>
   );

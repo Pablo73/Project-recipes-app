@@ -7,12 +7,12 @@ function SearchBar() {
   const { handleFetch } = useContext(RecipesContext);
 
   const handleInput = ({ target }) => {
-    // setSelectOption(target.value);
-    selectOption.current = target.value;
-    console.log(selectOption.current);
+    if (target.checked) {
+      selectOption.current = target.value;
+    }
   };
 
-  const handletwo = () => {
+  const handleSearch = () => {
     const ONE = 1;
     if (selectOption.current === 'firstLetter' && search.length > ONE) {
       global.alert('Your search must have only 1 (one) character');
@@ -21,33 +21,35 @@ function SearchBar() {
   };
 
   return (
-    <>
+    <div>
       <div>
         <input
           data-testid="search-input"
           name="search"
           type="texto"
           placeholder="Busca"
-          onChange={ (a) => setSearch(a.target.value) }
+          onChange={ ({ target }) => setSearch(target.value) }
         />
         <br />
-        <label htmlFor="Ingredient">
+        <label htmlFor="ingredient">
           <input
             type="radio"
-            name="Ingredient"
+            name="searchKind"
+            id="ingredient"
             value="ingredient"
-            checked={ selectOption.current === 'ingredient' }
+            defaultChecked={ selectOption.current === 'ingredient' }
             data-testid="ingredient-search-radio"
             onChange={ handleInput }
           />
           Ingredient
         </label>
-        <label htmlFor="Name">
+        <label htmlFor="name">
           <input
             type="radio"
-            name="Name"
+            name="searchKind"
+            id="name"
             value="name"
-            checked={ selectOption.current === 'name' }
+            defaultChecked={ selectOption.current === 'name' }
             data-testid="name-search-radio"
             onChange={ handleInput }
           />
@@ -56,9 +58,10 @@ function SearchBar() {
         <label htmlFor="First letter">
           <input
             type="radio"
-            name="First letter"
+            name="searchKind"
+            id="firstLetter"
             value="firstLetter"
-            checked={ selectOption.current === 'firstLetter' }
+            defaultChecked={ selectOption.current === 'firstLetter' }
             data-testid="first-letter-search-radio"
             onChange={ handleInput }
           />
@@ -68,11 +71,11 @@ function SearchBar() {
       <button
         type="button"
         data-testid="exec-search-btn"
-        onClick={ () => handletwo() }
+        onClick={ () => handleSearch() }
       >
         BUSCAR
       </button>
-    </>
+    </div>
   );
 }
 
