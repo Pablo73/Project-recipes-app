@@ -1,10 +1,13 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useRef, useState, useEffect } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
 
 function SearchBar() {
   const [search, setSearch] = useState('');
   const selectOption = useRef('');
-  const { handleFetch } = useContext(RecipesContext);
+  const { handleFetch, searchFood } = useContext(RecipesContext);
+  const history = useHistory();
+  const location = useLocation();
 
   const handleInput = ({ target }) => {
     if (target.checked) {
@@ -17,8 +20,23 @@ function SearchBar() {
     if (selectOption.current === 'firstLetter' && search.length > ONE) {
       global.alert('Your search must have only 1 (one) character');
     }
-    return handleFetch(selectOption.current, search);
+    handleFetch(selectOption.current, search);
+    // console.log(searchFood);
   };
+
+  useEffect(() => {
+    if (location.pathname.includes('meals') && searchFood.length === 1) {
+      // console.log(searchFood[0].idMeal);
+      const idMeals = searchFood[0].idMeal;
+      history.push(`/meals/${idMeals}`);
+    }
+
+    if (location.pathname.includes('drinks') && searchFood.length === 1) {
+      // console.log(searchFood[0].idDrink);
+      const idDrinks = searchFood[0].idDrink;
+      history.push(`/drinks/${idDrinks}`);
+    }
+  }, [handleFetch]);
 
   return (
     <div>
@@ -71,7 +89,7 @@ function SearchBar() {
       <button
         type="button"
         data-testid="exec-search-btn"
-        onClick={ () => handleSearch() }
+        onClick={ handleSearch }
       >
         BUSCAR
       </button>
