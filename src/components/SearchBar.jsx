@@ -5,7 +5,14 @@ import RecipesContext from '../context/RecipesContext';
 function SearchBar() {
   const [search, setSearch] = useState('');
   const selectOption = useRef('');
-  const { handleFetch, searchFood } = useContext(RecipesContext);
+
+  const { handleFetch,
+    searchFood,
+    setRenderDrinks,
+    setRenderMeals,
+    renderMeals,
+    renderDrinks } = useContext(RecipesContext);
+
   const history = useHistory();
   const location = useLocation();
 
@@ -21,20 +28,24 @@ function SearchBar() {
       global.alert('Your search must have only 1 (one) character');
     }
     handleFetch(selectOption.current, search);
-    // console.log(searchFood);
   };
 
   useEffect(() => {
     if (location.pathname.includes('meals') && searchFood.length === 1) {
-      // console.log(searchFood[0].idMeal);
       const idMeals = searchFood[0].idMeal;
       history.push(`/meals/${idMeals}`);
     }
-
     if (location.pathname.includes('drinks') && searchFood.length === 1) {
-      // console.log(searchFood[0].idDrink);
       const idDrinks = searchFood[0].idDrink;
       history.push(`/drinks/${idDrinks}`);
+    }
+    if (location.pathname.includes('drinks') && searchFood.length > 1) {
+      setRenderDrinks(searchFood);
+      console.log(renderDrinks);
+    }
+    if (location.pathname.includes('meals') && searchFood.length > 1) {
+      setRenderMeals(searchFood);
+      console.log(renderMeals);
     }
   }, [handleFetch]);
 

@@ -5,6 +5,8 @@ import RecipesContext from './RecipesContext';
 
 function RecipesProvider({ children }) {
   const [searchFood, setSearchFood] = useState([]);
+  const [renderDrinks, setRenderDrinks] = useState([]);
+  const [renderMeals, setRenderMeals] = useState([]);
   const location = useLocation();
 
   const defineFetchApi = useCallback((searchType, searchTerm) => {
@@ -46,7 +48,16 @@ function RecipesProvider({ children }) {
   const value = useMemo(() => ({
     handleFetch,
     searchFood,
-  }), [handleFetch, searchFood]);
+    setRenderDrinks,
+    renderDrinks,
+    setRenderMeals,
+    renderMeals,
+  }), [
+    handleFetch,
+    searchFood,
+    renderDrinks,
+    renderMeals,
+  ]);
 
   return (
     <RecipesContext.Provider value={ value }>
