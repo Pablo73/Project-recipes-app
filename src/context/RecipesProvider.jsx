@@ -43,7 +43,7 @@ function RecipesProvider({ children }) {
     } catch (error) {
       console.log(error);
     }
-  }, [searchFood, defineFetchApi]);
+  }, [searchFood, defineFetchApi, location]);
 
   const value = useMemo(() => ({
     handleFetch,

@@ -47,7 +47,14 @@ function SearchBar() {
       setRenderMeals(searchFood);
       console.log(renderMeals);
     }
-  }, [handleFetch]);
+  }, [handleFetch,
+    history,
+    location,
+    renderDrinks,
+    renderMeals,
+    searchFood,
+    setRenderDrinks,
+    setRenderMeals]);
 
   return (
     <div>
