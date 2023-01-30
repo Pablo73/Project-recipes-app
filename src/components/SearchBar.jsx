@@ -45,7 +45,7 @@ function SearchBar() {
     if (location.pathname.includes('meals') && searchFood.length > 1) {
       setRenderMeals(searchFood);
     }
-  }, [handleFetch,
+   }, [handleFetch,
     history,
     location,
     searchFood,
