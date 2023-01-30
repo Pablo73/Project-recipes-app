@@ -11,22 +11,19 @@ function Recipes() {
   const isDrinksLocation = location.pathname.includes('/drinks');
 
   useEffect(() => {
-    if (isMealsLocation && !renderMeals.length) {
-      console.log('entrou meals');
-
+    if (isMealsLocation) {
       fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=')
         .then((res) => res.json())
         .then((res) => setRecipes(res.meals))
         .catch((error) => console.error(error));
     }
-    if (isDrinksLocation && !renderDrinks.length) {
-      console.log('entrou drink');
+    if (isDrinksLocation) {
       fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=')
         .then((res) => res.json())
         .then((res) => setRecipes(res.drinks))
         .catch((error) => console.error(error));
     }
-  }, []);
+  }, [isDrinksLocation, isMealsLocation]);
 
   const isRenderItemLengthBiggerThan = renderMeals.length > 1 || renderDrinks.length > 1;
   const MAX_INDEX = 12;
