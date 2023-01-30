@@ -9,9 +9,7 @@ function SearchBar() {
   const { handleFetch,
     searchFood,
     setRenderDrinks,
-    setRenderMeals,
-    renderMeals,
-    renderDrinks } = useContext(RecipesContext);
+    setRenderMeals } = useContext(RecipesContext);
 
   const history = useHistory();
   const location = useLocation();
@@ -26,6 +24,8 @@ function SearchBar() {
     const ONE = 1;
     if (selectOption.current === 'firstLetter' && search.length > ONE) {
       global.alert('Your search must have only 1 (one) character');
+
+      return search;
     }
     handleFetch(selectOption.current, search);
   };
@@ -41,13 +41,16 @@ function SearchBar() {
     }
     if (location.pathname.includes('drinks') && searchFood.length > 1) {
       setRenderDrinks(searchFood);
-      console.log(renderDrinks);
     }
     if (location.pathname.includes('meals') && searchFood.length > 1) {
       setRenderMeals(searchFood);
-      console.log(renderMeals);
     }
-  }, [handleFetch]);
+  }, [handleFetch,
+    history,
+    location,
+    searchFood,
+    setRenderDrinks,
+    setRenderMeals]);
 
   return (
     <div>
