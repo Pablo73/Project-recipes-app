@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import React from 'react';
@@ -16,10 +16,14 @@ describe('Teste o componente Search Bar', () => {
 
   afterEach(() => jest.clearAllMocks());
 
+  const duplicatingLoading = 'Loading...';
+  const duplicatingInput = 'search-input';
+  const duplicatingBtn = 'search-btn';
+
   test('Verifica se a busca por ingrediente é realizada', async () => {
     renderWithRouter(<Meals />);
     await act(async () => renderWithRouter(<Meals />));
-    const imgSearch = screen.getAllByTestId('search-btn');
+    const imgSearch = screen.getAllByTestId(duplicatingBtn);
     expect(imgSearch[0]).toBeInTheDocument();
 
     userEvent.click(imgSearch[0]);
@@ -38,5 +42,59 @@ describe('Teste o componente Search Bar', () => {
     });
     expect(global.fetch).toHaveBeenCalled();
     expect(global.fetch).toHaveBeenCalledTimes(1);
+
+    const imgResult = screen.getAllByRole('img');
+    expect(imgResult.length).toBe(8);
+  });
+
+  test('Verifica se o resultado da pesquisa está correto', async () => {
+    const { history } = renderWithRouter(<Meals />);
+
+    const imgSearch = await screen.getAllByTestId(duplicatingBtn);
+    userEvent.click(imgSearch[0]);
+
+    const radioLetterButton = screen.getByTestId('first-letter-search-radio');
+    userEvent.click(radioLetterButton);
+
+    expect(radioLetterButton).toBeChecked();
+
+    const inputSearch = screen.getByTestId(duplicatingInput);
+    userEvent.type(inputSearch, 'A');
+
+    const searchBtn = screen.getByRole('button', { name: /buscar/i });
+    userEvent.click(searchBtn);
+
+    const loading = screen.getByText(duplicatingLoading);
+
+    await waitForElementToBeRemoved(() => screen.getByText(duplicatingLoading));
+    expect(loading).not.toBeInTheDocument();
+
+    expect(history.location.pathname).toBe('/meals/53049');
+  });
+
+  test('Verifica se o resultado for uma receita redireciona para a pagina correta', async () => {
+    const { history } = renderWithRouter(<Meals />);
+
+    const imgSearch = await screen.getAllByTestId(duplicatingBtn);
+    userEvent.click(imgSearch[0]);
+
+    const radioLetterButton = screen.getByTestId('name-search-radio');
+    userEvent.click(radioLetterButton);
+
+    expect(radioLetterButton).toBeChecked();
+
+    const inputSearch = screen.getByTestId(duplicatingInput);
+    userEvent.type(inputSearch, 'Arrabiata');
+
+    const searchBtn = screen.getByRole('button', { name: /buscar/i });
+    userEvent.click(searchBtn);
+
+    const loading = screen.getByText(duplicatingLoading);
+    await waitForElementToBeRemoved(() => screen.getByText(duplicatingLoading));
+    expect(loading).not.toBeInTheDocument();
+
+    expect(history.location.pathname).toBe('/meals/53049');
+    // const imgResult = screen.getAllByRole('img');
+    // expect(imgResult.length).toBe(1);
   });
 });
