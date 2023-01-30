@@ -1,6 +1,6 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import RecipesDrinks from '../components/RecipesDrinks';
+import Recipes from '../components/Recipes';
 
 function Drinks() {
   return (
@@ -10,7 +10,7 @@ function Drinks() {
           title="Drinks"
           withSearchIcon
         />
-        <RecipesDrinks />
+        <Recipes />
       </header>
       <Footer />
     </div>
