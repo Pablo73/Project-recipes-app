@@ -1,26 +1,24 @@
-import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import React from 'react';
 import renderWithRouter from '../renderWithRouter';
 import Meals from '../pages/Meals';
-import milkMeals from './mocks';
+import milkMeals from './mocks/mocks';
+import oneDrink from './mocks/oneDrink';
+import App from '../App';
+import twelve from './mocks/twelve';
+
+const testInpu = 'search-input';
+const duplicatingBtn = 'search-btn';
+const testExe = 'exec-search-btn';
+const btnTop = 'search-top-btn';
 
 describe('Teste o componente Search Bar', () => {
-  beforeEach(() => {
-    jest.spyOn(global, 'fetch');
-    global.fetch.mockResolvedValue({
+  test('Verifica se a busca por ingrediente é realizada', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
       json: jest.fn().mockResolvedValue(milkMeals),
     });
-  });
-
-  afterEach(() => jest.clearAllMocks());
-
-  const duplicatingLoading = 'Loading...';
-  const duplicatingInput = 'search-input';
-  const duplicatingBtn = 'search-btn';
-
-  test('Verifica se a busca por ingrediente é realizada', async () => {
     renderWithRouter(<Meals />);
     await act(async () => renderWithRouter(<Meals />));
     const imgSearch = screen.getAllByTestId(duplicatingBtn);
@@ -28,7 +26,7 @@ describe('Teste o componente Search Bar', () => {
 
     userEvent.click(imgSearch[0]);
 
-    const inputSearch = screen.getByTestId('search-input');
+    const inputSearch = screen.getByTestId(testInpu);
     expect(inputSearch).toBeInTheDocument();
 
     await act(async () => {
@@ -41,49 +39,68 @@ describe('Teste o componente Search Bar', () => {
       userEvent.click(searchBtn);
     });
     expect(global.fetch).toHaveBeenCalled();
-    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledTimes(5);
 
     const imgResult = screen.getAllByRole('img');
     expect(imgResult.length).toBe(8);
+    jest.restoreAllMocks();
   });
 
   test('Verifica se o resultado da pesquisa está correto', () => {
     renderWithRouter(<Meals />);
+    window.alert = () => { };
+    const mensageAlert = jest.spyOn(global, 'alert');
 
-    const topBtn = screen.getByTestId('search-top-btn');
-    userEvent.click(topBtn);
-    const searchInput = screen.getByTestId('search-input');
-    userEvent.type(searchInput, 'AA');
-    const first = screen.getByTestId('firstLetter');
-    userEvent.click(first);
-    const ExecBtn = screen.getByTestId('exec-search-btn');
-    userEvent.click(ExecBtn);
-    // expect(history.location.pathname).toBe('/meals/53049');
+    const searchBtn = screen.getByTestId(btnTop);
+    userEvent.click(searchBtn);
+    const searchText = screen.getByTestId(testInpu);
+    userEvent.type(searchText, 'aa');
+    const radio = screen.getByTestId('first-letter-search-radio');
+    userEvent.click(radio);
+    const execSearch = screen.getByTestId(testExe);
+    userEvent.click(execSearch);
+    expect(mensageAlert).toHaveBeenCalledTimes(1);
+    mensageAlert.mockClear();
   });
 
-  // test('Verifica se o resultado for uma receita redireciona para a pagina correta', async () => {
-  //   const { history } = renderWithRouter(<Meals />);
+  test('Verifica se o resultado da pesquisa 2 está correto', () => {
+    renderWithRouter(<Meals />);
 
-  //   const imgSearch = await screen.getAllByTestId(duplicatingBtn);
-  //   userEvent.click(imgSearch[0]);
+    const searchBtn = screen.getByTestId(btnTop);
+    userEvent.click(searchBtn);
+    const searchText = screen.getByTestId(testInpu);
+    userEvent.type(searchText, 'ovo');
+    const radio = screen.getByTestId('name-search-radio');
+    userEvent.click(radio);
+    const execSearch = screen.getByTestId(testExe);
+    userEvent.click(execSearch);
+  });
+  test.only('Verifica se o resultado for uma receita redireciona para a pagina correta', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      json: jest.fn()
+        .mockResolvedValue('default')
+        .mockResolvedValueOnce(oneDrink)
+        .mockResolvedValueOnce(twelve),
+    });
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/drinks');
+    });
 
-  //   const radioLetterButton = screen.getByTestId('name-search-radio');
-  //   userEvent.click(radioLetterButton);
+    // const drink = screen.getByTestId('drinks-bottom-btn');
+    // userEvent.click(drink);
 
-  //   expect(radioLetterButton).toBeChecked();
+    const searchBtn = screen.getByTestId(btnTop);
+    userEvent.click(searchBtn);
+    const searchText = screen.getByTestId(testInpu);
+    userEvent.type(searchText, 'Aquamarine');
+    const radio = screen.getByTestId('name-search-radio');
+    userEvent.click(radio);
+    const execSearch = screen.getByTestId(testExe);
+    userEvent.click(execSearch);
 
-  //   const inputSearch = screen.getByTestId(duplicatingInput);
-  //   userEvent.type(inputSearch, 'Arrabiata');
+    await waitFor(() => expect(history.location.pathname).toBe('drinks/178319'));
 
-  //   const searchBtn = screen.getByRole('button', { name: /buscar/i });
-  //   userEvent.click(searchBtn);
-
-  //   const loading = screen.getByText(duplicatingLoading);
-  //   // await waitForElementToBeRemoved(() => screen.getByText(duplicatingLoading));
-  //   expect(loading).toBeInTheDocument();
-
-  //   // expect(history.location.pathname).toBe('/meals/53049');
-  //   // const imgResult = screen.getAllByRole('img');
-  //   // expect(imgResult.length).toBe(1);
-  // });
+    userEvent.click(execSearch);
+  });
 });
