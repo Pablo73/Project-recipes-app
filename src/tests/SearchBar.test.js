@@ -75,7 +75,7 @@ describe('Teste o componente Search Bar', () => {
     const execSearch = screen.getByTestId(testExe);
     userEvent.click(execSearch);
   });
-  test.only('Verifica se o resultado for uma receita redireciona para a pagina correta', async () => {
+  test('Verifica se o resultado for uma receita redireciona para a pagina correta', async () => {
     jest.spyOn(global, 'fetch').mockResolvedValue({
       json: jest.fn()
         .mockResolvedValue('default')
