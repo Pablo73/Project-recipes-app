@@ -50,7 +50,7 @@ function Recipes() {
             <FilterButton key={ index } categoryName={ el.strCategory } />
           ))}
       </div>
-      <div className="recipe-card ">
+      <div className="recipe-card">
         {isRenderItemLengthBiggerThan
           ? listToRender
             .filter((rec, index) => index < MAX_RECIPES)

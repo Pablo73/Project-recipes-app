@@ -1,11 +1,22 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
+import useFetch from '../hooks/useFetch';
+import Recommendations from './Recommendations';
+import '../assets/css/Recipes.css';
+
+const thirtyTwo = 32;
+const eleven = 11;
 
 function RecipeDetails({ recipeId, url }) {
   const [detailsMeals, setDetailsMeals] = useState([]);
   const [detailsDrinks, setDetailsDrinks] = useState([]);
   const isMealsLocation = url.includes(`/meals/${recipeId}`);
   const isDrinksLocation = url.includes(`/drinks/${recipeId}`);
+  const { data: mealsRecommendations } = useFetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
+  const [mealsRecommendation, setMealsRecommendation] = useState([]);
+
+  const { data: drinksRecommendations } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
+  const [drinksRecommendation, setDrinksRecommendation] = useState([]);
 
   useEffect(() => {
     if (isMealsLocation) {
@@ -13,12 +24,16 @@ function RecipeDetails({ recipeId, url }) {
         .then((res) => res.json())
         .then((res) => setDetailsMeals(res.meals))
         .catch((error) => console.error(error));
+
+      setDrinksRecommendation(drinksRecommendations.drinks);
     }
     if (isDrinksLocation) {
       fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${recipeId}`)
         .then((res) => res.json())
         .then((res) => setDetailsDrinks(res.drinks))
         .catch((error) => console.error(error));
+
+      setMealsRecommendation(mealsRecommendations.meals);
     }
   }, [isDrinksLocation, isMealsLocation]);
 
@@ -27,12 +42,16 @@ function RecipeDetails({ recipeId, url }) {
   return (
     <div>
       <h1>RecipeDetails</h1>
+      <Recommendations
+        mealsRecommendation={ mealsRecommendation }
+        drinksRecommendation={ drinksRecommendation }
+      />
       {
         isMealsLocation ? detailsMeals.map((meals) => (
           <div key={ meals.idMeal }>
             <h3 data-testid="recipe-title">{meals.strMeal}</h3>
-            {/* <ol>
-              {detailsMeals.forEach((ele) => {
+            <ol>
+              {/* {detailsMeals.forEach((ele) => {
                 const ingredient = Object.keys(ele)
                   .filter((ingr) => ingr.includes('strIngredient'));
 
@@ -45,9 +64,16 @@ function RecipeDetails({ recipeId, url }) {
                 const measureListed = measure
                   .filter((a) => ele[a] !== '' && ele[a] !== null);
 
-                console.log(ingredientListed.map((vai) => ele[vai]));
-              })}
-            </ol> */}
+                return ingredientListed.map((vai) => (
+                  <li
+                    key={ vai }
+                    // data-testid={ `${index + 1}-ingredient-name-and-measure` }
+                  >
+                    {`${ele[vai]} -`}
+                  </li>
+                ));
+              })} */}
+            </ol>
             <p data-testid="recipe-category">
               Category:
               {' '}
@@ -58,6 +84,7 @@ function RecipeDetails({ recipeId, url }) {
               src={ meals.strMealThumb }
               alt={ meals.strMeal }
               data-testid="recipe-photo"
+              className="card"
             />
             <p data-testid="instructions">
               Intructions:
@@ -66,11 +93,14 @@ function RecipeDetails({ recipeId, url }) {
 
             </p>
             <iframe
-              data-testid="video"
-              width="420"
+              width="560"
               height="315"
-              title={ meals.strMeal }
-              src={ `${meals.strYoutube}autoplay=1&mute=1` }
+              src={ `https://www.youtube.com/embed/${meals.strYoutube.substr(thirtyTwo, eleven)}` }
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write;
+              encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
             />
           </div>))
           : detailsDrinks.map((drink, index) => (
@@ -102,6 +132,7 @@ function RecipeDetails({ recipeId, url }) {
                 src={ drink.strDrinkThumb }
                 alt={ drink.strDrink }
                 data-testid="recipe-photo"
+                className="card"
               />
               <p data-testid="instructions">
                 Intructions:
