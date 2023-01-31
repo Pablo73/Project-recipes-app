@@ -2,7 +2,7 @@
   max-width: 90px;
 }
 
-.cardRecipe {
+.recipe-card {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

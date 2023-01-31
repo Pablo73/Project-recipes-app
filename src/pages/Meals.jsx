@@ -1,6 +1,6 @@
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import RecipesMeals from '../components/RecipesMeals';
+import Recipes from '../components/Recipes';
 
 function Meals() {
   return (
@@ -9,7 +9,7 @@ function Meals() {
         title="Meals"
         withSearchIcon
       />
-      <RecipesMeals />
+      <Recipes />
       <Footer />
     </div>
   );

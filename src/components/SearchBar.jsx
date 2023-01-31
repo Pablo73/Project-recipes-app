@@ -28,6 +28,7 @@ function SearchBar() {
       return search;
     }
     handleFetch(selectOption.current, search);
+    setSearch('');
   };
 
   useEffect(() => {
