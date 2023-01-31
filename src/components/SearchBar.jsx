@@ -105,7 +105,7 @@ function SearchBar() {
         data-testid="exec-search-btn"
         onClick={ handleSearch }
       >
-        BUSCAR
+        Search
       </button>
     </div>
   );
