@@ -51,6 +51,10 @@ function RecipesProvider({ children }) {
     }
   }, [searchFood, defineFetchApi, location]);
 
+  const clearsearchFood = () => {
+    setSearchFood([]);
+  };
+
   const value = useMemo(() => ({
     handleFetch,
     searchFood,
@@ -59,6 +63,7 @@ function RecipesProvider({ children }) {
     setRenderMeals,
     renderMeals,
     isLoading,
+    clearsearchFood,
   }), [
     handleFetch,
     searchFood,
