@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
 import useFetch from '../hooks/useFetch';
 import Card from './Card';
@@ -13,6 +13,7 @@ function Recipes() {
   const { data: drinkCategories } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
   const [categories, setCategories] = useState([]);
   const location = useLocation();
+  const history = useHistory();
   const isMealsLocation = location.pathname.includes('/meals');
   const isDrinksLocation = location.pathname.includes('/drinks');
 
@@ -40,6 +41,13 @@ function Recipes() {
   const MAX_CATEGORIES = 5;
   const listToRender = isMealsLocation ? renderMeals : renderDrinks;
 
+  const redirectToDetails = (id) => {
+    if (isMealsLocation) {
+      return history.push(`/meals/${id}`);
+    }
+    return history.push(`/drinks/${id}`);
+  };
+
   return (
     <div>
       <h1>Recipes</h1>
@@ -62,6 +70,8 @@ function Recipes() {
                   isMealsLocation ? recipe.strMealThumb : recipe.strDrinkThumb
                 }
                 name={ isMealsLocation ? recipe.strMeal : recipe.strDrink }
+                onButtonClick={ () => redirectToDetails(isMealsLocation
+                  ? recipe.idMeal : recipe.idDrink) }
               />
             ))
           : (recipes && recipes
@@ -74,6 +84,8 @@ function Recipes() {
                   isMealsLocation ? recipe.strMealThumb : recipe.strDrinkThumb
                 }
                 name={ isMealsLocation ? recipe.strMeal : recipe.strDrink }
+                onButtonClick={ () => redirectToDetails(isMealsLocation
+                  ? recipe.idMeal : recipe.idDrink) }
               />
             ))}
       </div>
