@@ -35,10 +35,12 @@ function RecipeDetails({ recipeId, url }) {
         [key]: details[0][key],
       }), {});
 
-    const teste = Object.values(measures);
+    const measuresArray = Object.values(measures);
 
     const combinedValues = Object.values(ingredients)
-      .map((ingredient, index) => `${ingredient} ${!teste[index] ? '' : teste[index]}`)
+      .map((ingredient, index) => `${ingredient} ${!measuresArray[index]
+        ? ''
+        : measuresArray[index]}`)
       .filter((combination) => combination !== '  ' && !combination.includes(null));
 
     return combinedValues;
