@@ -25,7 +25,6 @@ function RecipeDetails({ recipeId, url }) {
     }
   }, [isDrinksLocation, isMealsLocation]);
 
-
   const progress = () => {
     if (isMealsLocation) {
       return history.push(`/meals/${recipeId}/in-progress`);
@@ -60,7 +59,6 @@ function RecipeDetails({ recipeId, url }) {
 
     return combinedValues;
   };
-
 
   return (
     <div>
