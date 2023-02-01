@@ -37,7 +37,31 @@ function RecipeDetails({ recipeId, url }) {
     }
   }, [isDrinksLocation, isMealsLocation]);
 
-  // console.log(detailsMeals, detailsDrinks);
+  const combineIngredientsAndMeasures = (details) => {
+    // Extraindo os ingredientes nas chaves que incluem strIngredient;
+    const ingredients = Object.keys(details[0])
+      .filter((key) => key.includes('strIngredient'))
+      .reduce((obj, key) => Object.assign(obj, {
+        [key]: details[0][key],
+      }), {});
+
+    // Extraindo as medidas nas chaves que incluem strMeasure;
+    const measures = Object.keys(details[0])
+      .filter((key) => key.includes('strMeasure'))
+      .reduce((obj, key) => Object.assign(obj, {
+        [key]: details[0][key],
+      }), {});
+
+    const measuresArray = Object.values(measures);
+
+    const combinedValues = Object.values(ingredients)
+      .map((ingredient, index) => `${ingredient} ${!measuresArray[index]
+        ? ''
+        : measuresArray[index]}`)
+      .filter((combination) => combination !== '  ' && !combination.includes(null));
+
+    return combinedValues;
+  };
 
   return (
     <div>
@@ -50,30 +74,16 @@ function RecipeDetails({ recipeId, url }) {
         isMealsLocation ? detailsMeals.map((meals) => (
           <div key={ meals.idMeal }>
             <h3 data-testid="recipe-title">{meals.strMeal}</h3>
-            <ol>
-              {/* {detailsMeals.forEach((ele) => {
-                const ingredient = Object.keys(ele)
-                  .filter((ingr) => ingr.includes('strIngredient'));
-
-                const measure = Object.keys(ele)
-                  .filter((ingr) => ingr.includes('strMeasure'));
-
-                const ingredientListed = ingredient
-                  .filter((a) => ele[a] !== '' && ele[a] !== null);
-
-                const measureListed = measure
-                  .filter((a) => ele[a] !== '' && ele[a] !== null);
-
-                return ingredientListed.map((vai) => (
+            <ul>
+              {combineIngredientsAndMeasures(detailsMeals)
+                .map((ingredient, index) => ((
                   <li
-                    key={ vai }
-                    // data-testid={ `${index + 1}-ingredient-name-and-measure` }
+                    key={ index }
+                    data-testid={ `${index}-ingredient-name-and-measure` }
                   >
-                    {`${ele[vai]} -`}
-                  </li>
-                ));
-              })} */}
-            </ol>
+                    {ingredient}
+                  </li>)))}
+            </ul>
             <p data-testid="recipe-category">
               Category:
               {' '}
@@ -103,26 +113,20 @@ function RecipeDetails({ recipeId, url }) {
               allowFullScreen
             />
           </div>))
-          : detailsDrinks.map((drink, index) => (
+          : detailsDrinks.map((drink) => (
             <div key={ drink.idDrink }>
               <h3 data-testid="recipe-title">{drink.strDrink}</h3>
-              <ol>
-                <li
-                  data-testid={ `${index}-ingredient-name-and-measure` }
-                >
-                  {`${drink.strIngredient1} - ${drink.strMeasure1}`}
-                </li>
-                <li
-                  data-testid={ `${index}-ingredient-name-and-measure` }
-                >
-                  {`${drink.strIngredient2} - ${drink.strMeasure2}`}
-                </li>
-                <li
-                  data-testid={ `${index}-ingredient-name-and-measure` }
-                >
-                  {`${drink.strIngredient3} - ${drink.strMeasure3}`}
-                </li>
-              </ol>
+              <ul>
+                {combineIngredientsAndMeasures(detailsDrinks)
+                  .map((ingredient, dIndex) => ((
+                    <li
+                      key={ dIndex }
+                      data-testid={ `${dIndex}-ingredient-name-and-measure` }
+                    >
+                      {ingredient}
+                    </li>)))}
+
+              </ul>
               <p data-testid="recipe-category">
                 Drink:
                 {' '}
