@@ -23,12 +23,14 @@ function RecipeDetails({ recipeId, url }) {
   }, [isDrinksLocation, isMealsLocation]);
 
   const combineIngredientsAndMeasures = (details) => {
+    // Extraindo os ingredientes nas chaves que incluem strIngredient;
     const ingredients = Object.keys(details[0])
       .filter((key) => key.includes('strIngredient'))
       .reduce((obj, key) => Object.assign(obj, {
         [key]: details[0][key],
       }), {});
 
+    // Extraindo as medidas nas chaves que incluem strMeasure;
     const measures = Object.keys(details[0])
       .filter((key) => key.includes('strMeasure'))
       .reduce((obj, key) => Object.assign(obj, {
