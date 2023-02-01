@@ -8,7 +8,6 @@ import oneFood from './mocks/oneFood';
 
 const drink = 178319;
 const idMeals = 52771;
-// const time = 5000;
 
 const mocks = () => {
   jest.spyOn(global, 'fetch').mockImplementationOnce(() => Promise.resolve({
@@ -22,10 +21,11 @@ describe('Testando o component Details', () => {
   jest.clearAllMocks();
   beforeEach(mocks);
   afterEach(() => jest.clearAllMocks());
+
   test('testando rota', async () => {
     const { history } = renderWithRouter(<App />);
+    history.push(`/drinks/${drink}`);
     await act(async () => {
-      history.push(`/drinks/${drink}`);
       // expect(screen.getByText(/category: vegetarian/i)).toBeInTheDocument();
       expect(history.location.pathname).toBe('/drinks/178319');
     });
