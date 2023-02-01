@@ -42,6 +42,22 @@ function Recipes() {
   const MAX_CATEGORIES = 5;
   const listToRender = isMealsLocation ? renderMeals : renderDrinks;
 
+  const filterByCategory = async (filter) => {
+    let apiUrl = '';
+    if (isMealsLocation) {
+      apiUrl = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${filter}`;
+    } else {
+      apiUrl = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${filter}`;
+    }
+    try {
+      const request = await fetch(apiUrl);
+      const response = await request.json();
+      setRecipes(isMealsLocation ? response.meals : response.drinks);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const redirectToDetails = (id) => {
     if (isMealsLocation) {
       return history.push(`/meals/${id}`);
