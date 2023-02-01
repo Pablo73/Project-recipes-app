@@ -1,11 +1,14 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+// import Buttons from './Buttons';
 
 function RecipeDetails({ recipeId, url }) {
   const [detailsMeals, setDetailsMeals] = useState([]);
   const [detailsDrinks, setDetailsDrinks] = useState([]);
   const isMealsLocation = url.includes(`/meals/${recipeId}`);
   const isDrinksLocation = url.includes(`/drinks/${recipeId}`);
+  const history = useHistory();
 
   useEffect(() => {
     if (isMealsLocation) {
@@ -21,6 +24,15 @@ function RecipeDetails({ recipeId, url }) {
         .catch((error) => console.error(error));
     }
   }, [isDrinksLocation, isMealsLocation]);
+
+  const progress = () => {
+    if (isMealsLocation) {
+      return history.push(`/meals/${recipeId}/in-progress`);
+    }
+    return history.push(`/drinks/${recipeId}/in-progress`);
+  };
+
+  // console.log(detailsMeals, detailsDrinks);
 
   const combineIngredientsAndMeasures = (details) => {
     // Extraindo os ingredientes nas chaves que incluem strIngredient;
@@ -120,8 +132,17 @@ function RecipeDetails({ recipeId, url }) {
                 {drink.strInstructions}
 
               </p>
+
             </div>))
       }
+      <button
+        type="button"
+        data-testid="start-recipe-btn"
+        onClick={ () => progress() }
+        className="start-recipe-btn"
+      >
+        Start Recipe
+      </button>
     </div>
   );
 }
