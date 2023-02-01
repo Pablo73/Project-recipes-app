@@ -1,12 +1,23 @@
 import PropTypes from 'prop-types';
 import '../assets/css/Recipes.css';
 
-function Card({ index, image, name }) {
+function Card({ index, image, name, onButtonClick }) {
   return (
-    <div className="card" data-testid={ `${index}-recipe-card` }>
-      <img src={ image } alt="" data-testid={ `${index}-card-img` } />
+    <button
+      type="button"
+      onClick={ onButtonClick }
+      className="card"
+      data-testid={ `${index}-recipe-card` }
+    >
+      <img className="card" src={ image } alt="" data-testid={ `${index}-card-img` } />
       <p data-testid={ `${index}-card-name` }>{name}</p>
-    </div>
+      {/* <button
+        type="button"
+        onClick={ onButtonClick }
+      >
+        A
+      </button> */}
+    </button>
   );
 }
 

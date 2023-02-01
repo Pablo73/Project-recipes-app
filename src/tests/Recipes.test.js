@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react';
 // import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import React from 'react';
+import userEvent from '@testing-library/user-event';
 import renderWithRouter from '../renderWithRouter';
 import meals from '../../cypress/mocks/meals';
 import drinks from '../../cypress/mocks/drinks';
@@ -27,6 +28,10 @@ describe('Teste o componente Recipes', () => {
     mealsRecipes.meals.slice(0, 12).forEach((recipe, index) => {
       expect(screen.getByTestId(`${index}-recipe-card`)).toBeInTheDocument();
     });
+    const card = screen.getByTestId('0-recipe-card');
+    await (act(async () => {
+      userEvent.click(card);
+    }));
   });
 
   it('Teste se quando a página DRINKS é carregada são listadas 12 receitas', async () => {
@@ -43,5 +48,9 @@ describe('Teste o componente Recipes', () => {
     drinksRecipes.drinks.slice(0, 12).forEach((recipe, index) => {
       expect(screen.getByTestId(`${index}-recipe-card`)).toBeInTheDocument();
     });
+    const card = screen.getByTestId('0-recipe-card');
+    await (act(async () => {
+      userEvent.click(card);
+    }));
   });
 });
