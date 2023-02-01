@@ -11,12 +11,6 @@ function Card({ index, image, name, onButtonClick }) {
     >
       <img className="card" src={ image } alt="" data-testid={ `${index}-card-img` } />
       <p data-testid={ `${index}-card-name` }>{name}</p>
-      {/* <button
-        type="button"
-        onClick={ onButtonClick }
-      >
-        A
-      </button> */}
     </button>
   );
 }
