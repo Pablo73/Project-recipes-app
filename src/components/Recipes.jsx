@@ -12,6 +12,7 @@ function Recipes() {
   const { data: mealCategories } = useFetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
   const { data: drinkCategories } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
   const [categories, setCategories] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   const location = useLocation();
   const history = useHistory();
   const isMealsLocation = location.pathname.includes('/meals');
@@ -34,12 +35,28 @@ function Recipes() {
 
       setCategories(drinkCategories.drinks);
     }
-  }, [isDrinksLocation, isMealsLocation, mealCategories, drinkCategories]);
+  }, [isDrinksLocation, isMealsLocation, mealCategories, drinkCategories, refresh]);
 
   const isRenderItemLengthBiggerThan = renderMeals.length > 1 || renderDrinks.length > 1;
   const MAX_RECIPES = 12;
   const MAX_CATEGORIES = 5;
   const listToRender = isMealsLocation ? renderMeals : renderDrinks;
+
+  const filterByCategory = async (filter) => {
+    let apiUrl = '';
+    if (isMealsLocation) {
+      apiUrl = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${filter}`;
+    } else {
+      apiUrl = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${filter}`;
+    }
+    try {
+      const request = await fetch(apiUrl);
+      const response = await request.json();
+      setRecipes(isMealsLocation ? response.meals : response.drinks);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const redirectToDetails = (id) => {
     if (isMealsLocation) {
@@ -55,8 +72,13 @@ function Recipes() {
         {categories && categories
           .filter((el, index) => index < MAX_CATEGORIES)
           .map((el, index) => (
-            <FilterButton key={ index } categoryName={ el.strCategory } />
+            <FilterButton
+              key={ index }
+              categoryName={ el.strCategory }
+              onFilterClick={ () => filterByCategory(el.strCategory) }
+            />
           ))}
+        <FilterButton categoryName="All" onFilterClick={ () => setRefresh(true) } />
       </div>
       <div className="recipe-card ">
         {isRenderItemLengthBiggerThan
