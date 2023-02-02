@@ -59,7 +59,7 @@ describe('Testa o componente <FavoriteRecipes />', () => {
     const filterMeal = screen.getByTestId('filter-by-meal-btn');
     userEvent.click(filterMeal);
 
-    // expect(screen.getByText('Aquamarine')).toBeInTheDocument();
+    // expect(screen.getByText('Spicy Arrabiata Penne')).toBeInTheDocument();
     // expect(screen.getByText('Alcoholic')).toBeInTheDocument();
   });
 });
