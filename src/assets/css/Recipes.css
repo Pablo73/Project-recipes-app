@@ -2,8 +2,18 @@
   max-width: 90px;
 }
 
+/* border: solid black; */
 .recipe-card {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+/* border: solid black; */
+.recipe-rec {
+  display: flex;
+}
+
+.d-block {
+  max-width: 90px;
 }

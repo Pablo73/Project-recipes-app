@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import RecipesContext from '../context/RecipesContext';
 import useFetch from '../hooks/useFetch';
-import Recommendations from './Recommendations';
+import RecommendationsMeals from './RecommendationsMeals';
+import RecommendationsDrinks from './RecommendationsDrinks';
 import '../assets/css/Recipes.css';
 
 const thirtyTwo = 32;
@@ -12,33 +14,32 @@ const eleven = 11;
 function RecipeDetails({ recipeId, url }) {
   const [detailsMeals, setDetailsMeals] = useState([]);
   const [detailsDrinks, setDetailsDrinks] = useState([]);
-  const isMealsLocation = url.includes(`/meals/${recipeId}`);
-  const isDrinksLocation = url.includes(`/drinks/${recipeId}`);
+  const isMealsLocation = url === `/meals/${recipeId}`;
+  const isDrinksLocation = url === `/drinks/${recipeId}`;
   const { data: mealsRecommendations } = useFetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
-  const [mealsRecommendation, setMealsRecommendation] = useState([]);
-
   const { data: drinksRecommendations } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
-  const [drinksRecommendation, setDrinksRecommendation] = useState([]);
+
+  const { setMealsRecommendation, setDrinksRecommendation } = useContext(RecipesContext);
   const history = useHistory();
 
   useEffect(() => {
     if (isMealsLocation) {
+      setDrinksRecommendation(drinksRecommendations.drinks);
+
       fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`)
         .then((res) => res.json())
         .then((res) => setDetailsMeals(res.meals))
         .catch((error) => console.error(error));
-
-      setDrinksRecommendation(drinksRecommendations.drinks);
     }
     if (isDrinksLocation) {
+      setMealsRecommendation(mealsRecommendations.meals);
+
       fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${recipeId}`)
         .then((res) => res.json())
         .then((res) => setDetailsDrinks(res.drinks))
         .catch((error) => console.error(error));
-
-      setMealsRecommendation(mealsRecommendations.meals);
     }
-  }, [isDrinksLocation, isMealsLocation]);
+  }, [isDrinksLocation, isMealsLocation, drinksRecommendations, mealsRecommendations]);
 
   const progress = () => {
     if (isMealsLocation) {
@@ -78,13 +79,10 @@ function RecipeDetails({ recipeId, url }) {
   return (
     <div>
       <h1>RecipeDetails</h1>
-      <Recommendations
-        mealsRecommendation={ mealsRecommendation }
-        drinksRecommendation={ drinksRecommendation }
-      />
       {
         isMealsLocation ? detailsMeals.map((meals) => (
           <div key={ meals.idMeal }>
+            <RecommendationsDrinks />
             <h3 data-testid="recipe-title">{meals.strMeal}</h3>
             <ul>
               {combineIngredientsAndMeasures(detailsMeals)
@@ -128,6 +126,7 @@ function RecipeDetails({ recipeId, url }) {
           </div>))
           : detailsDrinks.map((drink) => (
             <div key={ drink.idDrink }>
+              <RecommendationsMeals />
               <h3 data-testid="recipe-title">{drink.strDrink}</h3>
               <ul>
                 {combineIngredientsAndMeasures(detailsDrinks)
