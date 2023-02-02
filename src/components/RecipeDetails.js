@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import RecipesContext from '../context/RecipesContext';
 import useFetch from '../hooks/useFetch';
-import Recommendations from './Recommendations';
+import RecommendationsMeals from './RecommendationsMeals';
+import RecommendationsDrinks from './RecommendationsDrinks';
 import '../assets/css/Recipes.css';
 
 const thirtyTwo = 32;
@@ -10,70 +12,76 @@ const eleven = 11;
 function RecipeDetails({ recipeId, url }) {
   const [detailsMeals, setDetailsMeals] = useState([]);
   const [detailsDrinks, setDetailsDrinks] = useState([]);
-  const isMealsLocation = url.includes(`/meals/${recipeId}`);
-  const isDrinksLocation = url.includes(`/drinks/${recipeId}`);
+  const isMealsLocation = url === `/meals/${recipeId}`;
+  const isDrinksLocation = url === `/drinks/${recipeId}`;
   const { data: mealsRecommendations } = useFetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
-  const [mealsRecommendation, setMealsRecommendation] = useState([]);
-
   const { data: drinksRecommendations } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
-  const [drinksRecommendation, setDrinksRecommendation] = useState([]);
+
+  const { setMealsRecommendation, setDrinksRecommendation } = useContext(RecipesContext);
 
   useEffect(() => {
     if (isMealsLocation) {
+      setDrinksRecommendation(drinksRecommendations.drinks);
+
       fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`)
         .then((res) => res.json())
         .then((res) => setDetailsMeals(res.meals))
         .catch((error) => console.error(error));
-
-      setDrinksRecommendation(drinksRecommendations.drinks);
     }
     if (isDrinksLocation) {
+      setMealsRecommendation(mealsRecommendations.meals);
+
       fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${recipeId}`)
         .then((res) => res.json())
         .then((res) => setDetailsDrinks(res.drinks))
         .catch((error) => console.error(error));
-
-      setMealsRecommendation(mealsRecommendations.meals);
     }
-  }, [isDrinksLocation, isMealsLocation]);
+  }, [isDrinksLocation, isMealsLocation, drinksRecommendations, mealsRecommendations]);
 
-  // console.log(detailsMeals, detailsDrinks);
+  const combineIngredientsAndMeasures = (details) => {
+    // Extraindo os ingredientes nas chaves que incluem strIngredient;
+    const ingredients = Object.keys(details[0])
+      .filter((key) => key.includes('strIngredient'))
+      .reduce((obj, key) => Object.assign(obj, {
+        [key]: details[0][key],
+      }), {});
+
+    // Extraindo as medidas nas chaves que incluem strMeasure;
+    const measures = Object.keys(details[0])
+      .filter((key) => key.includes('strMeasure'))
+      .reduce((obj, key) => Object.assign(obj, {
+        [key]: details[0][key],
+      }), {});
+
+    const measuresArray = Object.values(measures);
+
+    const combinedValues = Object.values(ingredients)
+      .map((ingredient, index) => `${ingredient} ${!measuresArray[index]
+        ? ''
+        : measuresArray[index]}`)
+      .filter((combination) => combination !== '  ' && !combination.includes(null));
+
+    return combinedValues;
+  };
 
   return (
     <div>
       <h1>RecipeDetails</h1>
-      <Recommendations
-        mealsRecommendation={ mealsRecommendation }
-        drinksRecommendation={ drinksRecommendation }
-      />
       {
         isMealsLocation ? detailsMeals.map((meals) => (
           <div key={ meals.idMeal }>
+            <RecommendationsDrinks />
             <h3 data-testid="recipe-title">{meals.strMeal}</h3>
-            <ol>
-              {/* {detailsMeals.forEach((ele) => {
-                const ingredient = Object.keys(ele)
-                  .filter((ingr) => ingr.includes('strIngredient'));
-
-                const measure = Object.keys(ele)
-                  .filter((ingr) => ingr.includes('strMeasure'));
-
-                const ingredientListed = ingredient
-                  .filter((a) => ele[a] !== '' && ele[a] !== null);
-
-                const measureListed = measure
-                  .filter((a) => ele[a] !== '' && ele[a] !== null);
-
-                return ingredientListed.map((vai) => (
+            <ul>
+              {combineIngredientsAndMeasures(detailsMeals)
+                .map((ingredient, index) => ((
                   <li
-                    key={ vai }
-                    // data-testid={ `${index + 1}-ingredient-name-and-measure` }
+                    key={ index }
+                    data-testid={ `${index}-ingredient-name-and-measure` }
                   >
-                    {`${ele[vai]} -`}
-                  </li>
-                ));
-              })} */}
-            </ol>
+                    {ingredient}
+                  </li>)))}
+            </ul>
             <p data-testid="recipe-category">
               Category:
               {' '}
@@ -103,26 +111,21 @@ function RecipeDetails({ recipeId, url }) {
               allowFullScreen
             />
           </div>))
-          : detailsDrinks.map((drink, index) => (
+          : detailsDrinks.map((drink) => (
             <div key={ drink.idDrink }>
+              <RecommendationsMeals />
               <h3 data-testid="recipe-title">{drink.strDrink}</h3>
-              <ol>
-                <li
-                  data-testid={ `${index}-ingredient-name-and-measure` }
-                >
-                  {`${drink.strIngredient1} - ${drink.strMeasure1}`}
-                </li>
-                <li
-                  data-testid={ `${index}-ingredient-name-and-measure` }
-                >
-                  {`${drink.strIngredient2} - ${drink.strMeasure2}`}
-                </li>
-                <li
-                  data-testid={ `${index}-ingredient-name-and-measure` }
-                >
-                  {`${drink.strIngredient3} - ${drink.strMeasure3}`}
-                </li>
-              </ol>
+              <ul>
+                {combineIngredientsAndMeasures(detailsDrinks)
+                  .map((ingredient, dIndex) => ((
+                    <li
+                      key={ dIndex }
+                      data-testid={ `${dIndex}-ingredient-name-and-measure` }
+                    >
+                      {ingredient}
+                    </li>)))}
+
+              </ul>
               <p data-testid="recipe-category">
                 Drink:
                 {' '}
