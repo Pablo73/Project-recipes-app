@@ -12,7 +12,7 @@ function RecommendationsMeals() {
   const { mealsRecommendation } = useContext(RecipesContext);
 
   useEffect(() => {
-    if (mealsRecommendation !== undefined && mealsRecommendation.length > 1) {
+    if (mealsRecommendation) {
       const nameCarosel = mealsRecommendation.filter((recom, index) => index < SIX);
       setData(nameCarosel);
     }

@@ -25,7 +25,7 @@ function Recipes() {
         .then((res) => setRecipes(res.meals))
         .catch((error) => console.error(error));
 
-      setCategories(mealCategories.meals);
+      setCategories(mealCategories && mealCategories.meals);
     }
     if (isDrinksLocation) {
       fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=')
@@ -33,7 +33,7 @@ function Recipes() {
         .then((res) => setRecipes(res.drinks))
         .catch((error) => console.error(error));
 
-      setCategories(drinkCategories.drinks);
+      setCategories(drinkCategories && drinkCategories.drinks);
     }
   }, [isDrinksLocation, isMealsLocation, mealCategories, drinkCategories, refresh]);
 
