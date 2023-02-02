@@ -1,0 +1,42 @@
+.done-cards-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.done-card {
+  border: 1px solid black;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  width: min-content;
+}
+
+.done-img {
+  border-radius: 6px;
+  min-width: 250px;
+  width: 20vw;
+}
+
+.recipe-name {
+  font-weight: 700;
+}
+
+.recipe-category {
+  color: rgb(83, 83, 83);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: end;
+}
+
+.tags-container {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-start;
+}
+
+.tags-container span:before {
+  content: '#';
+}

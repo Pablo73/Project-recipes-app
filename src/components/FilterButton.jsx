@@ -1,10 +1,10 @@
 import React from 'react';
 
-function FilterButton({ categoryName, onFilterClick }) {
+function FilterButton({ categoryName, onFilterClick, testId }) {
   return (
     <button
       type="button"
-      data-testid={ `${categoryName}-category-filter` }
+      data-testid={ testId }
       onClick={ onFilterClick }
     >
       {categoryName}
