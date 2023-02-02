@@ -4,6 +4,7 @@ import RecipeDetails from '../components/RecipeDetails';
 import Buttons from '../components/Buttons';
 
 function SearchDrinks(props) {
+  // const link = `/${type}s/${id}`;
   const { match: { params: { id }, url } } = props;
   return (
     <div>
@@ -12,7 +13,7 @@ function SearchDrinks(props) {
         recipeId={ id }
         url={ url }
       />
-      <Buttons />
+      <Buttons url={ url } />
     </div>
   );
 }
