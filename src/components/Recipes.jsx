@@ -80,7 +80,7 @@ function Recipes() {
           ))}
         <FilterButton categoryName="All" onFilterClick={ () => setRefresh(true) } />
       </div>
-      <div className="recipe-card ">
+      <div className="recipe-card">
         {isRenderItemLengthBiggerThan
           ? listToRender
             .filter((rec, index) => index < MAX_RECIPES)
