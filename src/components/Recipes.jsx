@@ -74,11 +74,16 @@ function Recipes() {
           .map((el, index) => (
             <FilterButton
               key={ index }
+              testId={ `${el.strCategory}-category-filter` }
               categoryName={ el.strCategory }
               onFilterClick={ () => filterByCategory(el.strCategory) }
             />
           ))}
-        <FilterButton categoryName="All" onFilterClick={ () => setRefresh(true) } />
+        <FilterButton
+          testId="All-category-filter"
+          categoryName="All"
+          onFilterClick={ () => setRefresh(true) }
+        />
       </div>
       <div className="recipe-card">
         {isRenderItemLengthBiggerThan
