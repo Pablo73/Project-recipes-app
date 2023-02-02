@@ -7,6 +7,7 @@ import renderWithRouter from '../renderWithRouter';
 import meals from '../../cypress/mocks/meals';
 import drinks from '../../cypress/mocks/drinks';
 import App from '../App';
+import Recipes from '../components/Recipes';
 
 const mealsRecipes = meals;
 const drinksRecipes = drinks;
@@ -29,6 +30,11 @@ describe('Teste o componente Recipes', () => {
       expect(screen.getByTestId(`${index}-recipe-card`)).toBeInTheDocument();
     });
     const card = screen.getByTestId('0-recipe-card');
+    expect(card).toBeInTheDocument();
+    expect(screen.getByTestId('1-card-name')).toBeInTheDocument();
+
+    expect(screen.getAllByRole('img')).toHaveLength(16);
+
     await (act(async () => {
       userEvent.click(card);
     }));
@@ -40,7 +46,7 @@ describe('Teste o componente Recipes', () => {
       json: jest.fn().mockResolvedValue(drinksRecipes),
     });
     await (act(async () => {
-      const { history } = renderWithRouter(<App />);
+      const { history } = renderWithRouter(<Recipes />);
       history.push('/drinks');
     }));
 
@@ -48,9 +54,19 @@ describe('Teste o componente Recipes', () => {
     drinksRecipes.drinks.slice(0, 12).forEach((recipe, index) => {
       expect(screen.getByTestId(`${index}-recipe-card`)).toBeInTheDocument();
     });
-    const card = screen.getByTestId('0-recipe-card');
+    const card = screen.getByTestId('1-recipe-card');
+    expect(card).toBeInTheDocument();
+
+    expect(screen.getAllByRole('img')).toHaveLength(12);
+
     await (act(async () => {
       userEvent.click(card);
     }));
   });
+  // test('testando ',async () => {
+  //   await (act(async () => {
+  //     const { history } = renderWithRouter(<Recipes />);
+  //     history.push('/drinks');
+  //   }));
+  // });
 });
