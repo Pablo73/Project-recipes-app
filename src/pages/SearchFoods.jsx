@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import RecipeDetails from '../components/RecipeDetails';
+import Buttons from '../components/Buttons';
 
 function SearchFoods(props) {
   const { match: { params: { id }, url } } = props;
@@ -11,6 +12,7 @@ function SearchFoods(props) {
         recipeId={ id }
         url={ url }
       />
+      <Buttons />
     </div>
   );
 }

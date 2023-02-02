@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
 import useFetch from '../hooks/useFetch';
 import RecommendationsMeals from './RecommendationsMeals';
@@ -8,6 +9,7 @@ import '../assets/css/Recipes.css';
 
 const thirtyTwo = 32;
 const eleven = 11;
+// import Buttons from './Buttons';
 
 function RecipeDetails({ recipeId, url }) {
   const [detailsMeals, setDetailsMeals] = useState([]);
@@ -18,6 +20,7 @@ function RecipeDetails({ recipeId, url }) {
   const { data: drinksRecommendations } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
 
   const { setMealsRecommendation, setDrinksRecommendation } = useContext(RecipesContext);
+  const history = useHistory();
 
   useEffect(() => {
     if (isMealsLocation) {
@@ -37,6 +40,15 @@ function RecipeDetails({ recipeId, url }) {
         .catch((error) => console.error(error));
     }
   }, [isDrinksLocation, isMealsLocation, drinksRecommendations, mealsRecommendations]);
+
+  const progress = () => {
+    if (isMealsLocation) {
+      return history.push(`/meals/${recipeId}/in-progress`);
+    }
+    return history.push(`/drinks/${recipeId}/in-progress`);
+  };
+
+  // console.log(detailsMeals, detailsDrinks);
 
   const combineIngredientsAndMeasures = (details) => {
     // Extraindo os ingredientes nas chaves que incluem strIngredient;
@@ -101,6 +113,7 @@ function RecipeDetails({ recipeId, url }) {
 
             </p>
             <iframe
+              data-testid="video"
               width="560"
               height="315"
               src={ `https://www.youtube.com/embed/${meals.strYoutube.substr(thirtyTwo, eleven)}` }
@@ -143,8 +156,17 @@ function RecipeDetails({ recipeId, url }) {
                 {drink.strInstructions}
 
               </p>
+
             </div>))
       }
+      <button
+        type="button"
+        data-testid="start-recipe-btn"
+        onClick={ () => progress() }
+        className="start-recipe-btn"
+      >
+        Start Recipe
+      </button>
     </div>
   );
 }
