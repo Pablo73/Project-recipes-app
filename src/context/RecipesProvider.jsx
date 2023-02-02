@@ -5,9 +5,13 @@ import RecipesContext from './RecipesContext';
 
 function RecipesProvider({ children }) {
   const [searchFood, setSearchFood] = useState([]);
+  const [renderDrinks, setRenderDrinks] = useState([]);
+  const [renderMeals, setRenderMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
 
   const defineFetchApi = useCallback((searchType, searchTerm) => {
+    setIsLoading(true);
     if (location.pathname.includes('meals')) {
       const mealsApi = {
         ingredient: `https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchTerm}`,
@@ -31,16 +35,42 @@ function RecipesProvider({ children }) {
       const apiUrl = defineFetchApi(searchType, searchTerm);
       const responseFood = await fetch(apiUrl);
       const results = await responseFood.json();
-      setSearchFood(results);
+      if (location.pathname.includes('drinks') && results.drinks !== null) {
+        setSearchFood(results.drinks);
+      }
+      if (location.pathname.includes('meals') && results.meals !== null) {
+        setSearchFood(results.meals);
+      }
+      if (results.drinks === null || results.meals === null) {
+        global.alert('Sorry, we haven\'t found any recipes for these filters.');
+      }
+      setIsLoading(false);
       return searchFood;
     } catch (error) {
       console.log(error);
     }
-  }, [searchFood, defineFetchApi]);
+  }, [searchFood, defineFetchApi, location]);
+
+  const clearsearchFood = () => {
+    setSearchFood([]);
+  };
 
   const value = useMemo(() => ({
     handleFetch,
-  }), [handleFetch]);
+    searchFood,
+    setRenderDrinks,
+    renderDrinks,
+    setRenderMeals,
+    renderMeals,
+    isLoading,
+    clearsearchFood,
+  }), [
+    handleFetch,
+    searchFood,
+    renderDrinks,
+    renderMeals,
+    isLoading,
+  ]);
 
   return (
     <RecipesContext.Provider value={ value }>

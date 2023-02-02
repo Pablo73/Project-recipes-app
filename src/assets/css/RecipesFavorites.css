@@ -1,0 +1,8 @@
+.RecipePic {
+  max-width: 250px;
+}
+
+.start-recipe-btn {
+  bottom: 0;
+  position: fixed;
+}

@@ -1,0 +1,9 @@
+.card {
+  max-width: 90px;
+}
+
+.recipe-card {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}

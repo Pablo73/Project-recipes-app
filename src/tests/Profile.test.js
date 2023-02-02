@@ -17,11 +17,14 @@ describe('Verifica se o profile', () => {
     expect(inputBtnLogout).toBeInTheDocument();
 
     userEvent.click(inputBtnDoneRecipes);
-    userEvent.click(inputBtnFavoriteRecipes);
-    userEvent.click(inputBtnLogout);
-
     expect(history.location.pathname).toBe('/done-recipes');
+    userEvent.click(screen.getByRole('img', { name: /profile icon/i }));
+
+    userEvent.click(inputBtnFavoriteRecipes);
     expect(history.location.pathname).toBe('/favorite-recipes');
+    userEvent.click(screen.getByRole('img', { name: /profile icon/i }));
+
+    userEvent.click(inputBtnLogout);
     expect(history.location.pathname).toBe('/');
   });
 });

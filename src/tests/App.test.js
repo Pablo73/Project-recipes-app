@@ -19,12 +19,4 @@ describe('Verifica se a Página de Login', () => {
     userEvent.click(inputBtn);
     expect(history.location.pathname).toBe('/meals');
   });
-
-  // test(' possui o input de Nome', () => {
-  //   render(<Login />);
-  // });
-
-  // test(' possui um Botão de Play', () => {
-  //   render(<Login />);
-  // });
 });
