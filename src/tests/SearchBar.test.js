@@ -249,7 +249,7 @@ describe('Teste o componente Search Bar', () => {
     expect(screen.queryByTestId('12-card-img')).not.toBeInTheDocument();
     expect(screen.queryByTestId('12-card-name')).not.toBeInTheDocument();
 
-    screen.logTestingPlaygroundURL();
+    // screen.logTestingPlaygroundURL();
 
     expect(global.fetch).toHaveBeenCalledTimes(5);
   });
