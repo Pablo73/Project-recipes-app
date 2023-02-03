@@ -1,6 +1,7 @@
 import { useContext, useRef, useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import RecipesContext from '../context/RecipesContext';
+import Button from './Button';
 
 function SearchBar() {
   const [search, setSearch] = useState('');
@@ -101,13 +102,11 @@ function SearchBar() {
           First letter
         </label>
       </div>
-      <button
-        type="button"
-        data-testid="exec-search-btn"
-        onClick={ handleSearch }
-      >
-        Search
-      </button>
+      <Button
+        testId="exec-search-btn"
+        onButtonClick={ handleSearch }
+        buttonName="Search"
+      />
     </div>
   );
 }

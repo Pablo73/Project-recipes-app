@@ -1,22 +1,19 @@
 import PropTypes from 'prop-types';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
-import RecipesContext from '../context/RecipesContext';
 import '../assets/css/Recipes.css';
 
 const SIX = 6;
 
-function RecommendationsDrinks() {
+function RecommendationsDrinks({ recommendation }) {
   const [data, setData] = useState([]);
 
-  const { drinksRecommendation } = useContext(RecipesContext);
-
   useEffect(() => {
-    if (drinksRecommendation) {
-      const nameCarosel = drinksRecommendation.filter((recom, index) => index < SIX);
+    if (recommendation) {
+      const nameCarosel = recommendation.filter((recom, index) => index < SIX);
       setData(nameCarosel);
     }
-  }, [drinksRecommendation]);
+  }, [recommendation]);
 
   const [indexs, setIndex] = useState(0);
 

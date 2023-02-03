@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import copy from 'clipboard-copy';
 import Header from '../components/Header';
 import RecipesFavorites from '../components/RecipesFavorites';
+import FilterButton from '../components/FilterButton';
 
 export default function FavoriteRecipes() {
   const [data, setData] = useState([]);
@@ -42,19 +43,21 @@ export default function FavoriteRecipes() {
         withSearchIcon={ false }
       />
       <div>
-        <button data-testid="filter-by-all-btn" onClick={ clearFilter }>All</button>
-        <button
-          data-testid="filter-by-meal-btn"
-          onClick={ () => setFilter('meal') }
-        >
-          Meals
-        </button>
-        <button
-          data-testid="filter-by-drink-btn"
-          onClick={ () => setFilter('drink') }
-        >
-          Drinks
-        </button>
+        <FilterButton
+          testId="filter-by-all-btn"
+          onFilterClick={ clearFilter }
+          categoryName="All"
+        />
+        <FilterButton
+          testId="filter-by-meal-btn"
+          onFilterClick={ () => setFilter('meal') }
+          categoryName="Meals"
+        />
+        <FilterButton
+          testId="filter-by-drink-btn"
+          onFilterClick={ () => setFilter('drink') }
+          categoryName="Drinks"
+        />
       </div>
       <div>
         { data.length > 0 && data.map((item, index) => (<RecipesFavorites

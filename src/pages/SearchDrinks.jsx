@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import RecipeDetails from '../components/RecipeDetails';
-import Buttons from '../components/Buttons';
+import Buttons from '../components/ShareAndFavoriteButtons';
 
 function SearchDrinks(props) {
   // const link = `/${type}s/${id}`;

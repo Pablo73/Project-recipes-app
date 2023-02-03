@@ -13,6 +13,7 @@ export default function ShareButton({ url }) {
     clipboardCopy(`http://localhost:3000${url}`);
     setCopy(true);
   }
+
   return (
     <div className="buttons">
       <input

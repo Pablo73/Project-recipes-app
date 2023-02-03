@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from './Button';
 import shareIcon from '../images/shareIcon.svg';
 
 function DoneCard({
@@ -33,13 +34,11 @@ function DoneCard({
         {recipeName}
       </p>
       <p data-testid={ `${index}-horizontal-done-date` }>{recipeDate}</p>
-      <button type="button">
-        <img
-          src={ shareIcon }
-          alt="Compartilhar"
-          data-testid={ `${index}-horizontal-share-btn` }
-        />
-      </button>
+      <Button
+        buttonImg={ { src: shareIcon,
+          alt: 'Compartilhar',
+          testId: `${index}-horizontal-share-btn` } }
+      />
       <div className="tags-container">
         {tags.map((tag, i) => (
           <span key={ i } data-testid={ `${index}-${tag}-horizontal-tag` }>

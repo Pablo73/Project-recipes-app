@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import rockGlass from '../images/rockGlass.svg';
+import Button from '../components/Button';
 
 function Login({ history }) {
   const [email, setEmail] = useState('');
@@ -54,14 +55,12 @@ function Login({ history }) {
         data-testid="password-input"
       />
       <br />
-      <button
-        type="button"
-        data-testid="login-submit-btn"
-        onClick={ userLogin }
-        disabled={ isDisabled }
-      >
-        Enter
-      </button>
+      <Button
+        testId="login-submit-btn"
+        onButtonClick={ userLogin }
+        isButtonDisabled={ isDisabled }
+        buttonName="Enter"
+      />
     </div>
   );
 }
