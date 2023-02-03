@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 import Buttons from '../components/Buttons';
+import IngredientInput from '../components/IngredientInput';
+import combineIngredientsAndMeasures from '../helpers/combineIngredientsAndMeasures';
 
 function RecipeInProgress() {
+  const [stepDone, setStepDone] = useState(false);
   const location = useLocation();
   const isMealsLocation = location.pathname.includes('/meals');
   const { id: routeId } = useParams();
@@ -44,6 +47,19 @@ function RecipeInProgress() {
               ? recipe.meals[0].strInstructions
               : recipe.drinks[0].strInstructions}
           </p>
+          <div className="ingredients-list">
+            {combineIngredientsAndMeasures(
+              isMealsLocation ? recipe.meals : recipe.drinks,
+            ).map((ingredient, index) => (
+              <IngredientInput
+                key={ index }
+                testId={ `${index}-ingredient-step` }
+                ingredient={ ingredient }
+                onCheck={ ({ target }) => setStepDone(target.checked) }
+                checked={ stepDone }
+              />
+            ))}
+          </div>
           <Buttons />
           <button data-testid="finish-recipe-btn">Finish Recipe</button>
         </div>
