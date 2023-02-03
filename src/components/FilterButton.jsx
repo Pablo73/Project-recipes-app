@@ -1,7 +1,6 @@
 import React from 'react';
 
 function FilterButton({ categoryName, onFilterClick, testId }) {
-  console.log(testId);
   return (
     <button
       type="button"

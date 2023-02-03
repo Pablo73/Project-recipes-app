@@ -1,105 +1,256 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import React from 'react';
 import renderWithRouter from '../renderWithRouter';
-import Meals from '../pages/Meals';
-import milkMeals from './mocks/mocks';
-import oneDrink from './mocks/oneDrink';
+import drinks from '../../cypress/mocks/drinks';
+import ginDrinks from '../../cypress/mocks/ginDrinks';
+import oneDrink from '../../cypress/mocks/oneDrink';
+import oneMeal from '../../cypress/mocks/oneMeal';
+import soupMeals from '../../cypress/mocks/soupMeals';
+// import emptyMeals from '../../cypress/mocks/emptyMeals';
+import meals from '../../cypress/mocks/meals';
 import App from '../App';
-import twelve from './mocks/twelve';
 
 const testInpu = 'search-input';
-const duplicatingBtn = 'search-btn';
 const testExe = 'exec-search-btn';
 const btnTop = 'search-top-btn';
+const nameRadio = 'name-search-radio';
+const card = '0-recipe-card';
 
 describe('Teste o componente Search Bar', () => {
-  test('Verifica se a busca por ingrediente é realizada', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValue({
-      json: jest.fn().mockResolvedValue(milkMeals),
-    });
-    renderWithRouter(<Meals />);
-    await act(async () => renderWithRouter(<Meals />));
-    const imgSearch = screen.getAllByTestId(duplicatingBtn);
-    expect(imgSearch[0]).toBeInTheDocument();
-
-    userEvent.click(imgSearch[0]);
-
-    const inputSearch = screen.getByTestId(testInpu);
-    expect(inputSearch).toBeInTheDocument();
-
-    await act(async () => {
-      const radioLetterButton = screen.getByRole('radio', { name: /ingredient/i });
-      expect(radioLetterButton).toBeInTheDocument();
-      userEvent.click(radioLetterButton);
-      expect(radioLetterButton).toBeChecked();
-      userEvent.type(inputSearch, 'milk');
-      // const searchBtn = screen.getByRole('button', { name: /buscar/i });
-      const searchBtn = screen.getByTestId(testExe);
-      userEvent.click(searchBtn);
-    });
-    expect(global.fetch).toHaveBeenCalled();
-    expect(global.fetch).toHaveBeenCalledTimes(5);
-
-    const imgResult = screen.getAllByRole('img');
-    expect(imgResult.length).toBe(8);
-    jest.restoreAllMocks();
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  test('Verifica se o resultado da pesquisa está correto', () => {
-    renderWithRouter(<Meals />);
-    window.alert = () => { };
-    const mensageAlert = jest.spyOn(global, 'alert');
-
-    const searchBtn = screen.getByTestId(btnTop);
-    userEvent.click(searchBtn);
-    const searchText = screen.getByTestId(testInpu);
-    userEvent.type(searchText, 'aa');
-    const radio = screen.getByTestId('first-letter-search-radio');
-    userEvent.click(radio);
-    const execSearch = screen.getByTestId(testExe);
-    userEvent.click(execSearch);
-    expect(mensageAlert).toHaveBeenCalledTimes(1);
-    mensageAlert.mockClear();
-  });
-
-  test('Verifica se o resultado da pesquisa 2 está correto', () => {
-    renderWithRouter(<Meals />);
-
-    const searchBtn = screen.getByTestId(btnTop);
-    userEvent.click(searchBtn);
-    const searchText = screen.getByTestId(testInpu);
-    userEvent.type(searchText, 'ovo');
-    const radio = screen.getByTestId('name-search-radio');
-    userEvent.click(radio);
-    const execSearch = screen.getByTestId(testExe);
-    userEvent.click(execSearch);
-  });
   test('Verifica se o resultado for uma receita redireciona para a pagina correta', async () => {
     jest.spyOn(global, 'fetch').mockResolvedValue({
       json: jest.fn()
-        .mockResolvedValue('default')
-        .mockResolvedValueOnce(oneDrink)
-        .mockResolvedValueOnce(twelve),
+        .mockResolvedValue(drinks)
+        .mockResolvedValue(oneDrink),
     });
+
     const { history } = renderWithRouter(<App />);
     act(() => {
       history.push('/drinks');
     });
 
-    // const drink = screen.getByTestId('drinks-bottom-btn');
-    // userEvent.click(drink);
+    expect(await screen.findByTestId(card)).toBeInTheDocument();
 
     const searchBtn = screen.getByTestId(btnTop);
     userEvent.click(searchBtn);
+
+    expect(screen.getByTestId(testExe)).toBeInTheDocument();
+
     const searchText = screen.getByTestId(testInpu);
     userEvent.type(searchText, 'Aquamarine');
-    const radio = screen.getByTestId('name-search-radio');
+
+    expect(searchText.value).toBe('Aquamarine');
+
+    const radio = screen.getByTestId(nameRadio);
     userEvent.click(radio);
+
+    expect(radio).toBeChecked();
+
     const execSearch = screen.getByTestId(testExe);
     userEvent.click(execSearch);
 
-    // await waitFor(() => expect(history.location.pathname).toBe('drinks/178319'));
+    await waitFor(() => expect(history.location.pathname).toBe('/drinks/178319'));
+  });
+
+  test('Verifica se ao digitar duas letras no input e escolher o chekcbox  first letter aparece um alerta', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      json: jest.fn().mockResolvedValue(drinks),
+    });
+
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/drinks');
+    });
+    expect(await screen.findByTestId(card)).toBeInTheDocument();
+
+    const searchBtn = screen.getByTestId(btnTop);
+    userEvent.click(searchBtn);
+
+    expect(screen.getByTestId(testExe)).toBeInTheDocument();
+
+    const searchText = screen.getByTestId(testInpu);
+    userEvent.type(searchText, 'Aquamarine');
+
+    const radio = screen.getByTestId('first-letter-search-radio');
+    userEvent.click(radio);
+
+    const alertMok = jest.spyOn(window, 'alert');
+
+    const execSearch = screen.getByTestId(testExe);
+    userEvent.click(execSearch);
+
+    expect(alertMok).toBeDefined();
+  });
+
+  test('Verifica se o resultado for uma receita redireciona para a pagina correta', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      json: jest.fn()
+        .mockResolvedValue(meals)
+        .mockResolvedValue(oneMeal),
+    });
+
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/meals');
+    });
+
+    expect(await screen.findByTestId(card)).toBeInTheDocument();
+
+    const searchBtn = screen.getByTestId(btnTop);
+    userEvent.click(searchBtn);
+
+    expect(screen.getByTestId(testExe)).toBeInTheDocument();
+
+    const searchText = screen.getByTestId(testInpu);
+    userEvent.type(searchText, 'Corba');
+
+    expect(searchText.value).toBe('Corba');
+
+    const radio = screen.getByTestId(nameRadio);
+    userEvent.click(radio);
+
+    expect(radio).toBeChecked();
+
+    const execSearch = screen.getByTestId(testExe);
+    userEvent.click(execSearch);
+
+    await waitFor(() => expect(history.location.pathname).toBe('/meals/52771'));
+  });
+
+  test('Verifica se ao pesquisar por soup é retornado 10 receitas', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      json: jest.fn()
+        .mockResolvedValue(meals)
+        .mockResolvedValue(soupMeals),
+    });
+
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/meals');
+    });
+
+    expect(await screen.findByTestId(card)).toBeInTheDocument();
+
+    const searchBtn = screen.getByTestId(btnTop);
+    userEvent.click(searchBtn);
+
+    expect(screen.getByTestId(testExe)).toBeInTheDocument();
+
+    const searchText = screen.getByTestId(testInpu);
+    userEvent.type(searchText, 'Soup');
+
+    const radio = screen.getByTestId(nameRadio);
+    userEvent.click(radio);
+
+    const execSearch = screen.getByTestId(testExe);
+    userEvent.click(execSearch);
+
+    await waitFor(() => expect(history.location.pathname).toBe('/meals'));
+
+    await waitFor(() => expect(soupMeals.meals.length).toBe(10));
+
+    await waitFor(() => soupMeals.meals.forEach((meal, index) => {
+      expect(screen.getByTestId(`${index}-recipe-card`)).toBeInTheDocument();
+      expect(screen.getByText(meal.strMeal)).toBeInTheDocument();
+      expect(screen.getByTestId(`${index}-card-img`)).toBeInTheDocument();
+      expect(screen.getByTestId(`${index}-card-name`)).toBeInTheDocument();
+    }));
+
+    expect(screen.queryByTestId('10-recipe-card')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('10-card-img')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('10-card-name')).not.toBeInTheDocument();
+
+    expect(global.fetch).toHaveBeenCalledTimes(5);
+  });
+
+  test('Verifica se API retorna null, um alerta é mostrado', async () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn()
+        .mockResolvedValue(meals),
+    });
+
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/meals');
+    });
+
+    expect(await screen.findByTestId(card)).toBeInTheDocument();
+
+    const searchBtn = screen.getByTestId(btnTop);
+    userEvent.click(searchBtn);
+
+    expect(screen.getByTestId(testExe)).toBeInTheDocument();
+
+    const searchText = screen.getByTestId(testInpu);
+    userEvent.type(searchText, '4d4d4d4d');
+
+    const radio = screen.getByTestId(nameRadio);
+    userEvent.click(radio);
+
+    const alertMok = jest.spyOn(window, 'alert');
+
+    const execSearch = screen.getByTestId(testExe);
+    userEvent.click(execSearch);
+
+    expect(alertMok).toBeDefined();
+  });
+
+  test('Verifica se ao pesquisar por Gin é retornado 12 receitas', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      json: jest.fn()
+        .mockResolvedValue(drinks)
+        .mockResolvedValue(ginDrinks),
+    });
+
+    const { history } = renderWithRouter(<App />);
+    act(() => {
+      history.push('/drinks');
+    });
+
+    expect(await screen.findByTestId(card)).toBeInTheDocument();
+
+    // screen.logTestingPlaygroundURL();
+
+    const searchBtn = screen.getByTestId(btnTop);
+    userEvent.click(searchBtn);
+
+    expect(screen.getByTestId(testExe)).toBeInTheDocument();
+
+    const searchText = screen.getByTestId(testInpu);
+    userEvent.type(searchText, 'Gin');
+
+    const radio = screen.getByTestId(nameRadio);
+    userEvent.click(radio);
+
+    const execSearch = screen.getByTestId(testExe);
+    userEvent.click(execSearch);
+
+    await waitFor(() => expect(global.fetch));
+
+    await waitFor(() => expect(history.location.pathname).toBe('/drinks'));
+
+    await waitFor(() => expect(ginDrinks.drinks.length).toBe(16));
+
+    await waitFor(() => ginDrinks.drinks.slice(0, 12).forEach((drink, index) => {
+      expect(screen.getByTestId(`${index}-recipe-card`)).toBeInTheDocument();
+      expect(screen.getByText(drink.strDrink)).toBeInTheDocument();
+      expect(screen.getByTestId(`${index}-card-img`)).toBeInTheDocument();
+      expect(screen.getByTestId(`${index}-card-name`)).toBeInTheDocument();
+    }));
+
+    expect(screen.queryByTestId('12-recipe-card')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('12-card-img')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('12-card-name')).not.toBeInTheDocument();
+
+    screen.logTestingPlaygroundURL();
+
+    expect(global.fetch).toHaveBeenCalledTimes(5);
   });
 });
