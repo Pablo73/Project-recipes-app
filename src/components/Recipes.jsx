@@ -17,6 +17,7 @@ function Recipes() {
   const history = useHistory();
   const isMealsLocation = location.pathname.includes('/meals');
   const isDrinksLocation = location.pathname.includes('/drinks');
+  const [previousValueButton, setPreviousValueButton] = useState('initial');
 
   useEffect(() => {
     if (isMealsLocation) {
@@ -76,13 +77,16 @@ function Recipes() {
               key={ index }
               testId={ `${el.strCategory}-category-filter` }
               categoryName={ el.strCategory }
-              onFilterClick={ () => filterByCategory(el.strCategory) }
+              onFilterClick={ (prev) => (previousValueButton === prev.target.innerHTML
+                ? (setRefresh(!refresh))
+                : (filterByCategory(el.strCategory)
+              && setPreviousValueButton(el.strCategory))) }
             />
           ))}
         <FilterButton
-          testId="All-category-filter"
           categoryName="All"
-          onFilterClick={ () => setRefresh(true) }
+          onFilterClick={ () => setRefresh(!refresh) }
+          testId="All-category-filter"
         />
       </div>
       <div className="recipe-card">
