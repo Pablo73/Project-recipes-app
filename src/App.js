@@ -7,8 +7,7 @@ import Meals from './pages/Meals';
 import Drinks from './pages/Drinks';
 import SearchFoods from './pages/SearchFoods';
 import SearchDrinks from './pages/SearchDrinks';
-import SearchFoodsProgress from './pages/SearchFoodsProgress';
-import SearchDrinksProgress from './pages/SearchDrinksProgress';
+import RecipeInProgress from './pages/RecipeInProgress';
 import Profile from './pages/Profile';
 import DoneRecipes from './pages/DoneRecipes';
 import FavoriteRecipes from './pages/FavoriteRecipes';
@@ -17,18 +16,10 @@ function App() {
   return (
     <div>
       <Switch>
-        <Route
-          exact
-          path="/meals/:id/in-progress"
-          component={ SearchFoodsProgress }
-        />
+        <Route path="/meals/:id/in-progress" component={ RecipeInProgress } />
+        <Route path="/drinks/:id/in-progress" component={ RecipeInProgress } />
         <Route exact path="/drinks/:id" component={ SearchDrinks } />
         <Route exact path="/meals/:id" component={ SearchFoods } />
-        <Route
-          exact
-          path="/drinks/:id/in-progress"
-          component={ SearchDrinksProgress }
-        />
         <Route exact path="/profile" component={ Profile } />
         <Route exact path="/done-recipes" component={ DoneRecipes } />
         <Route exact path="/favorite-recipes" component={ FavoriteRecipes } />

@@ -12,7 +12,7 @@ function RecommendationsDrinks() {
   const { drinksRecommendation } = useContext(RecipesContext);
 
   useEffect(() => {
-    if (drinksRecommendation !== undefined && drinksRecommendation.length > 1) {
+    if (drinksRecommendation) {
       const nameCarosel = drinksRecommendation.filter((recom, index) => index < SIX);
       setData(nameCarosel);
     }

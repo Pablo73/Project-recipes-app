@@ -24,7 +24,7 @@ function RecipeDetails({ recipeId, url }) {
 
   useEffect(() => {
     if (isMealsLocation) {
-      setDrinksRecommendation(drinksRecommendations.drinks);
+      setDrinksRecommendation(drinksRecommendations && drinksRecommendations.drinks);
 
       fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`)
         .then((res) => res.json())
@@ -32,7 +32,7 @@ function RecipeDetails({ recipeId, url }) {
         .catch((error) => console.error(error));
     }
     if (isDrinksLocation) {
-      setMealsRecommendation(mealsRecommendations.meals);
+      setMealsRecommendation(mealsRecommendations && mealsRecommendations.meals);
 
       fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${recipeId}`)
         .then((res) => res.json())
