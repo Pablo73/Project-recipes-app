@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom';
 import RecipesContext from '../context/RecipesContext';
 import useFetch from '../hooks/useFetch';
 import RecommendationsMeals from './RecommendationsMeals';
 import RecommendationsDrinks from './RecommendationsDrinks';
 import combineIngredientsAndMeasures from '../helpers/combineIngredientsAndMeasures';
 import '../assets/css/Recipes.css';
+import Buttons from './Buttons';
 
 const thirtyTwo = 32;
 const eleven = 11;
@@ -21,8 +23,9 @@ function RecipeDetails({ recipeId, url }) {
   const { data: drinksRecommendations } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
 
   const { setMealsRecommendation, setDrinksRecommendation } = useContext(RecipesContext);
+  const location = useLocation();
   const history = useHistory();
-
+  // console.log(detailsDrinks, detailsMeals);
   useEffect(() => {
     if (isMealsLocation) {
       setDrinksRecommendation(drinksRecommendations && drinksRecommendations.drinks);
@@ -48,6 +51,24 @@ function RecipeDetails({ recipeId, url }) {
     }
     return history.push(`/drinks/${recipeId}/in-progress`);
   };
+
+  function isInProgress() {
+    const path = location.pathname.split('/');
+    const type = path[1];
+    const typeId = path[2];
+    let inProgress = false;
+    const inProgressRecipe = JSON.parse(
+      localStorage.getItem('inProgressRecipes'),
+    );
+    if (inProgressRecipe) {
+      Object.keys(inProgressRecipe[type]).forEach((reciId) => {
+        if (reciId === typeId) {
+          inProgress = true;
+        }
+      });
+    }
+    return inProgress;
+  }
 
   return (
     <div>
@@ -133,13 +154,19 @@ function RecipeDetails({ recipeId, url }) {
             </div>))
       }
       <button
-        type="button"
+        className="start-recipe-btn"
         data-testid="start-recipe-btn"
         onClick={ () => progress() }
-        className="start-recipe-btn"
       >
-        Start Recipe
+        {isInProgress() ? 'Continue Recipe' : 'Start Recipe'}
       </button>
+      <div>
+        <Buttons
+          meals={ detailsMeals }
+          drinks={ detailsDrinks }
+          url={ url }
+        />
+      </div>
     </div>
   );
 }
