@@ -63,10 +63,15 @@ describe('Teste o componente Recipes', () => {
       userEvent.click(card);
     }));
   });
-  // test('testando ',async () => {
+
+  // test.only('renders error when API call fails', async () => {
+  //   fetchMock.mockReject(() => Promise.reject(new Error('erro')));
+
   //   await (act(async () => {
   //     const { history } = renderWithRouter(<Recipes />);
   //     history.push('/drinks');
   //   }));
+
+  //   expect(await screen.findByText('error')).toBeInTheDocument();
   // });
 });
