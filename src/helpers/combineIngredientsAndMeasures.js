@@ -19,8 +19,7 @@ const combineIngredientsAndMeasures = (instructions) => {
     .map((ingredient, index) => `${ingredient} ${!measuresArray[index]
       ? ''
       : measuresArray[index]}`)
-    .filter((combination) => !combination.includes(null) && combination !== ' ');
-
+    .filter((combination) => combination !== '  ' && !combination.includes(null));
   return combinedValues;
 };
 
