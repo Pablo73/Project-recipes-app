@@ -1,20 +1,38 @@
-function Buttons() {
+import React, { useState } from 'react';
+import '../assets/css/Recipes.css';
+import clipboardCopy from 'clipboard-copy';
+import PropTypes from 'prop-types';
+import favoriteIcon from '../images/blackHeartIcon.svg';
+
+import shareIcon from '../images/shareIcon.svg';
+
+export default function ShareButton({ url }) {
+  const [copy, setCopy] = useState(false);
+
+  function handleShare() {
+    clipboardCopy(`http://localhost:3000${url}`);
+    setCopy(true);
+  }
   return (
-    <div>
-      <button
-        type="button"
+    <div className="buttons">
+      <input
+        type="image"
         data-testid="share-btn"
-      >
-        Share
-      </button>
-      <button
-        type="button"
+        onClick={ handleShare }
+        src={ shareIcon }
+        alt="share-button"
+      />
+      { copy ? <p>Link copied!</p> : '' }
+      <input
+        type="image"
         data-testid="favorite-btn"
-      >
-        Favorite
-      </button>
+        src={ favoriteIcon }
+        alt="favorite button"
+      />
     </div>
   );
 }
 
-export default Buttons;
+ShareButton.propTypes = {
+  url: PropTypes.string,
+}.isRequired;

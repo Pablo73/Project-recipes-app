@@ -17,3 +17,8 @@
 .d-block {
   max-width: 90px;
 }
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+}

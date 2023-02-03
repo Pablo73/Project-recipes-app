@@ -40,3 +40,16 @@
 .tags-container span:before {
   content: '#';
 }
+
+.step-done {
+  text-decoration: line-through solid black;
+}
+
+.ingredients-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.check {
+  margin-right: 0.5rem;
+}

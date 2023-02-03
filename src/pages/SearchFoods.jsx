@@ -12,7 +12,7 @@ function SearchFoods(props) {
         recipeId={ id }
         url={ url }
       />
-      <Buttons />
+      <Buttons url={ url } />
     </div>
   );
 }
