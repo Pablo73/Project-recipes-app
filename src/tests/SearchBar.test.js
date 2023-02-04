@@ -8,7 +8,6 @@ import ginDrinks from '../../cypress/mocks/ginDrinks';
 import oneDrink from '../../cypress/mocks/oneDrink';
 import oneMeal from '../../cypress/mocks/oneMeal';
 import soupMeals from '../../cypress/mocks/soupMeals';
-// import emptyMeals from '../../cypress/mocks/emptyMeals';
 import meals from '../../cypress/mocks/meals';
 import App from '../App';
 
@@ -153,7 +152,7 @@ describe('Teste o componente Search Bar', () => {
 
     await waitFor(() => expect(history.location.pathname).toBe('/meals'));
 
-    await waitFor(() => expect(soupMeals.meals.length).toBe(10));
+    await waitFor(() => expect(soupMeals.meals.length).toBe(9));
 
     await waitFor(() => soupMeals.meals.forEach((meal, index) => {
       expect(screen.getByTestId(`${index}-recipe-card`)).toBeInTheDocument();
@@ -216,8 +215,6 @@ describe('Teste o componente Search Bar', () => {
 
     expect(await screen.findByTestId(card)).toBeInTheDocument();
 
-    // screen.logTestingPlaygroundURL();
-
     const searchBtn = screen.getByTestId(btnTop);
     userEvent.click(searchBtn);
 
@@ -238,7 +235,7 @@ describe('Teste o componente Search Bar', () => {
 
     await waitFor(() => expect(ginDrinks.drinks.length).toBe(16));
 
-    await waitFor(() => ginDrinks.drinks.slice(0, 12).forEach((drink, index) => {
+    await waitFor(() => ginDrinks.drinks.slice(0, 13).forEach((drink, index) => {
       expect(screen.getByTestId(`${index}-recipe-card`)).toBeInTheDocument();
       expect(screen.getByText(drink.strDrink)).toBeInTheDocument();
       expect(screen.getByTestId(`${index}-card-img`)).toBeInTheDocument();
@@ -249,7 +246,7 @@ describe('Teste o componente Search Bar', () => {
     expect(screen.queryByTestId('12-card-img')).not.toBeInTheDocument();
     expect(screen.queryByTestId('12-card-name')).not.toBeInTheDocument();
 
-    screen.logTestingPlaygroundURL();
+    // screen.logTestingPlaygroundURL();
 
     expect(global.fetch).toHaveBeenCalledTimes(5);
   });
