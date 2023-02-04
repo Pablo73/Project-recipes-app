@@ -6,6 +6,7 @@ import Button from './Button';
 import RecommendationsMeals from './RecommendationsMeals';
 import RecommendationsDrinks from './RecommendationsDrinks';
 import combineIngredientsAndMeasures from '../helpers/combineIngredientsAndMeasures';
+import Buttons from './ShareAndFavoriteButtons';
 import '../assets/css/Recipes.css';
 
 const thirtyTwo = 32;
@@ -31,6 +32,24 @@ function RecipeDetails() {
     }
     return history.push(`/drinks/${recipeId}/in-progress`);
   };
+
+  function isInProgress() {
+    const path = location.pathname.split('/');
+    const type = path[1];
+    const typeId = path[2];
+    let inProgress = false;
+    const inProgressRecipe = JSON.parse(
+      localStorage.getItem('inProgressRecipes'),
+    );
+    if (inProgressRecipe) {
+      Object.keys(inProgressRecipe[type]).forEach((reciId) => {
+        if (reciId === typeId) {
+          inProgress = true;
+        }
+      });
+    }
+    return inProgress;
+  }
 
   return (
     <div>
@@ -125,8 +144,15 @@ function RecipeDetails() {
         testId="start-recipe-btn"
         onButtonClick={ () => progress() }
         buttonClass="start-recipe-btn"
-        buttonName="Start Recipe"
+        buttonName={ isInProgress() ? 'Continue Recipe' : 'Start Recipe' }
       />
+      <div>
+        <Buttons
+          url={ location.pathname }
+          detailsMeals={ recipe && recipe.meals }
+          detailsDrinks={ recipe && recipe.drinks }
+        />
+      </div>
     </div>
   );
 }

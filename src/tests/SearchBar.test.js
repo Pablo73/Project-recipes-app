@@ -8,7 +8,6 @@ import ginDrinks from '../../cypress/mocks/ginDrinks';
 import oneDrink from '../../cypress/mocks/oneDrink';
 import oneMeal from '../../cypress/mocks/oneMeal';
 import soupMeals from '../../cypress/mocks/soupMeals';
-// import emptyMeals from '../../cypress/mocks/emptyMeals';
 import meals from '../../cypress/mocks/meals';
 import App from '../App';
 
@@ -215,8 +214,6 @@ describe('Teste o componente Search Bar', () => {
     });
 
     expect(await screen.findByTestId(card)).toBeInTheDocument();
-
-    // screen.logTestingPlaygroundURL();
 
     const searchBtn = screen.getByTestId(btnTop);
     userEvent.click(searchBtn);

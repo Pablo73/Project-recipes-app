@@ -10,6 +10,8 @@ function RecipesProvider({ children }) {
   const [isLoading, setIsLoading] = useState(false);
   const [mealsRecommendation, setMealsRecommendation] = useState([]);
   const [drinksRecommendation, setDrinksRecommendation] = useState([]);
+  const [detailsMeals, setDetailsMeals] = useState([]);
+  const [detailsDrinks, setDetailsDrinks] = useState([]);
   const location = useLocation();
 
   const defineFetchApi = useCallback((searchType, searchTerm) => {
@@ -71,6 +73,10 @@ function RecipesProvider({ children }) {
     setMealsRecommendation,
     drinksRecommendation,
     setDrinksRecommendation,
+    detailsMeals,
+    setDetailsMeals,
+    detailsDrinks,
+    setDetailsDrinks,
   }), [
     handleFetch,
     searchFood,
@@ -79,6 +85,8 @@ function RecipesProvider({ children }) {
     isLoading,
     mealsRecommendation,
     drinksRecommendation,
+    detailsMeals,
+    detailsDrinks,
   ]);
 
   return (
