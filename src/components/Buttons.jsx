@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../assets/css/Recipes.css';
 import clipboardCopy from 'clipboard-copy';
 import PropTypes from 'prop-types';
@@ -8,26 +8,17 @@ import shareIcon from '../images/shareIcon.svg';
 
 export default function Buttons({ url, meals, drinks }) {
   const [copy, setCopy] = useState(false);
-  const fav = [];
-  localStorage.setItem('favoriteRecipes', fav);
-  // console.log(meals[0].idMeal);
-  // useEffect(() => {
-  //   const oldLocal = JSON.parse(localStorage.getItem('favoriteRecipes'));
-  //   if (oldLocal === null) {
-  //     const newLocal = [];
-  //     setLS(newLocal);
-  //     localStorage.setItem('favoriteRecipes', JSON.stringify(newLocal));
-  //   } else {
-  //     oldLocal.forEach((e) => {
-  //       if (e.id === recipe[`id${recipeId}`]) setFav(true);
-  //     });
-  //     setLS(oldLocal);
-  //   }
-  // }, [recipe, recipeId]);
+
+  useEffect(() => {
+    const fav = [];
+    const getLocal = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (getLocal === null) {
+      localStorage.setItem('favoriteRecipes', JSON.stringify(fav));
+    }
+  }, []);
 
   function favoriteClick() {
-    const getLS = localStorage.getItem('favoriteRecipes');
-    console.log(getLS);
+    const getLS = JSON.parse(localStorage.getItem('favoriteRecipes'));
     if (drinks.length === 1) {
       const objDrinks = {
         id: drinks[0].idDrink,
@@ -38,8 +29,7 @@ export default function Buttons({ url, meals, drinks }) {
         name: drinks[0].strDrink,
         image: drinks[0].strDrinkThumb,
       };
-      localStorage.setItem('favoriteRecipes', JSON.stringify(objDrinks));
-      // console.log(localStorage.getItem('favoriteRecipes'));
+      localStorage.setItem('favoriteRecipes', JSON.stringify([...getLS, objDrinks]));
     }
     if (meals.length === 1) {
       const objMeals = {
@@ -52,7 +42,7 @@ export default function Buttons({ url, meals, drinks }) {
         image: meals[0].strMealThumb,
       };
       console.log(localStorage.getItem('favoriteRecipes'));
-      localStorage.setItem('favoriteRecipes', JSON.stringify(objMeals));
+      localStorage.setItem('favoriteRecipes', JSON.stringify([...getLS, objMeals]));
     }
   }
 

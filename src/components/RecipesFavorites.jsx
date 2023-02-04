@@ -9,7 +9,6 @@ function RecipesFavorites({
   img, name, category, id, favoriteFunc,
   func, index, nationality, alcohol, type, share }) {
   const link = `http://localhost:3000/${type}s/${id}`;
-  console.log(name, nationality, img);
 
   return (
     <div>

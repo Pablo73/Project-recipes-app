@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 // import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import React from 'react';
@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 import renderWithRouter from '../renderWithRouter';
 import meals from '../../cypress/mocks/meals';
 import drinks from '../../cypress/mocks/drinks';
+import oneDrink from '../../cypress/mocks/oneDrink';
 import App from '../App';
 import Recipes from '../components/Recipes';
 
@@ -13,7 +14,9 @@ const mealsRecipes = meals;
 const drinksRecipes = drinks;
 
 describe('Teste o componente Recipes', () => {
-  afterEach(() => jest.clearAllMocks());
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('Teste se quando a página MEALS é carregada são listadas 12 receitas', async () => {
     jest.spyOn(global, 'fetch');
@@ -63,15 +66,4 @@ describe('Teste o componente Recipes', () => {
       userEvent.click(card);
     }));
   });
-
-  // test.only('renders error when API call fails', async () => {
-  //   fetchMock.mockReject(() => Promise.reject(new Error('erro')));
-
-  //   await (act(async () => {
-  //     const { history } = renderWithRouter(<Recipes />);
-  //     history.push('/drinks');
-  //   }));
-
-  //   expect(await screen.findByText('error')).toBeInTheDocument();
-  // });
 });
