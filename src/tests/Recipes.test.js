@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 // import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import React from 'react';
@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event';
 import renderWithRouter from '../renderWithRouter';
 import meals from '../../cypress/mocks/meals';
 import drinks from '../../cypress/mocks/drinks';
-import oneDrink from '../../cypress/mocks/oneDrink';
+// import oneDrink from '../../cypress/mocks/oneDrink';
 import App from '../App';
 import Recipes from '../components/Recipes';
 
