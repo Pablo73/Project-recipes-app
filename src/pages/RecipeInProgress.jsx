@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
-import Buttons from '../components/Buttons';
+import Buttons from '../components/ShareAndFavoriteButtons';
 import IngredientInput from '../components/IngredientInput';
 import combineIngredientsAndMeasures from '../helpers/combineIngredientsAndMeasures';
 

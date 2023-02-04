@@ -1,50 +1,30 @@
-import PropTypes from 'prop-types';
-import React, { useEffect, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
-import { useLocation } from 'react-router-dom/cjs/react-router-dom';
-import RecipesContext from '../context/RecipesContext';
+// import PropTypes from 'prop-types';
+import React from 'react';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
+import Button from './Button';
 import RecommendationsMeals from './RecommendationsMeals';
 import RecommendationsDrinks from './RecommendationsDrinks';
 import combineIngredientsAndMeasures from '../helpers/combineIngredientsAndMeasures';
+import Buttons from './ShareAndFavoriteButtons';
 import '../assets/css/Recipes.css';
-import Buttons from './Buttons';
 
 const thirtyTwo = 32;
 const eleven = 11;
-// import Buttons from './Buttons';
 
-function RecipeDetails({ recipeId, url }) {
-  const { detailsMeals, setDetailsMeals,
-    detailsDrinks, setDetailsDrinks,
-    setDrinksRecommendation, setMealsRecommendation,
-  } = useContext(RecipesContext);
-  const isMealsLocation = url === `/meals/${recipeId}`;
-  const isDrinksLocation = url === `/drinks/${recipeId}`;
+function RecipeDetails() {
+  const location = useLocation();
+  const isMealsLocation = location.pathname.includes('/meals');
+  const { id: recipeId } = useParams();
+  const url = isMealsLocation
+    ? `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`
+    : `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${recipeId}`;
+
+  const { data: recipe } = useFetch(url);
   const { data: mealsRecommendations } = useFetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
   const { data: drinksRecommendations } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
 
-  const location = useLocation();
   const history = useHistory();
-  // console.log(detailsDrinks, detailsMeals);
-  useEffect(() => {
-    if (isMealsLocation) {
-      setDrinksRecommendation(drinksRecommendations && drinksRecommendations.drinks);
-
-      fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`)
-        .then((res) => res.json())
-        .then((res) => setDetailsMeals(res.meals))
-        .catch((error) => console.error(error));
-    }
-    if (isDrinksLocation) {
-      setMealsRecommendation(mealsRecommendations && mealsRecommendations.meals);
-
-      fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${recipeId}`)
-        .then((res) => res.json())
-        .then((res) => setDetailsDrinks(res.drinks))
-        .catch((error) => console.error(error));
-    }
-  }, [isDrinksLocation, isMealsLocation, drinksRecommendations, mealsRecommendations]);
 
   const progress = () => {
     if (isMealsLocation) {
@@ -75,95 +55,102 @@ function RecipeDetails({ recipeId, url }) {
     <div>
       <h1>RecipeDetails</h1>
       {
-        isMealsLocation ? detailsMeals.map((meals) => (
-          <div key={ meals.idMeal }>
-            <RecommendationsDrinks />
-            <h3 data-testid="recipe-title">{meals.strMeal}</h3>
-            <ul>
-              {combineIngredientsAndMeasures(detailsMeals)
-                .map((ingredient, index) => ((
-                  <li
-                    key={ index }
-                    data-testid={ `${index}-ingredient-name-and-measure` }
-                  >
-                    {ingredient}
-                  </li>)))}
-            </ul>
-            <p data-testid="recipe-category">
-              Category:
-              {' '}
-              {meals.strCategory}
-
-            </p>
-            <img
-              src={ meals.strMealThumb }
-              alt={ meals.strMeal }
-              data-testid="recipe-photo"
-              className="card"
-            />
-            <p data-testid="instructions">
-              Intructions:
-              {' '}
-              {meals.strInstructions}
-
-            </p>
-            <iframe
-              data-testid="video"
-              width="560"
-              height="315"
-              src={ `https://www.youtube.com/embed/${meals.strYoutube.substr(thirtyTwo, eleven)}` }
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write;
-              encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-          </div>))
-          : detailsDrinks.map((drink) => (
-            <div key={ drink.idDrink }>
-              <RecommendationsMeals />
-              <h3 data-testid="recipe-title">{drink.strDrink}</h3>
+        recipe && (
+          isMealsLocation ? recipe.meals.map((meals) => (
+            <div key={ meals.idMeal }>
+              <RecommendationsDrinks
+                recommendation={ drinksRecommendations
+                && drinksRecommendations.drinks }
+              />
+              <h3 data-testid="recipe-title">{meals.strMeal}</h3>
               <ul>
-                {combineIngredientsAndMeasures(detailsDrinks)
-                  .map((ingredient, dIndex) => ((
+                {combineIngredientsAndMeasures(recipe.meals)
+                  .map((ingredient, index) => ((
                     <li
-                      key={ dIndex }
-                      data-testid={ `${dIndex}-ingredient-name-and-measure` }
+                      key={ index }
+                      data-testid={ `${index}-ingredient-name-and-measure` }
                     >
                       {ingredient}
                     </li>)))}
-
               </ul>
               <p data-testid="recipe-category">
-                Drink:
+                Category:
                 {' '}
-                {drink.strAlcoholic}
+                {meals.strCategory}
+
               </p>
               <img
-                src={ drink.strDrinkThumb }
-                alt={ drink.strDrink }
+                src={ meals.strMealThumb }
+                alt={ meals.strMeal }
                 data-testid="recipe-photo"
                 className="card"
               />
               <p data-testid="instructions">
                 Intructions:
                 {' '}
-                {drink.strInstructions}
+                {meals.strInstructions}
 
               </p>
-
+              <iframe
+                data-testid="video"
+                width="560"
+                height="315"
+                src={ `https://www.youtube.com/embed/${meals.strYoutube.substr(thirtyTwo, eleven)}` }
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write;
+                encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
             </div>))
+            : recipe.drinks.map((drink) => (
+              <div key={ drink.idDrink }>
+                <RecommendationsMeals
+                  recommendation={ mealsRecommendations
+                  && mealsRecommendations.meals }
+                />
+                <h3 data-testid="recipe-title">{drink.strDrink}</h3>
+                <ul>
+                  {combineIngredientsAndMeasures(recipe.drinks)
+                    .map((ingredient, dIndex) => ((
+                      <li
+                        key={ dIndex }
+                        data-testid={ `${dIndex}-ingredient-name-and-measure` }
+                      >
+                        {ingredient}
+                      </li>)))}
+
+                </ul>
+                <p data-testid="recipe-category">
+                  Drink:
+                  {' '}
+                  {drink.strAlcoholic}
+                </p>
+                <img
+                  src={ drink.strDrinkThumb }
+                  alt={ drink.strDrink }
+                  data-testid="recipe-photo"
+                  className="card"
+                />
+                <p data-testid="instructions">
+                  Intructions:
+                  {' '}
+                  {drink.strInstructions}
+                </p>
+              </div>))
+        )
       }
-      <button
-        className="start-recipe-btn"
-        data-testid="start-recipe-btn"
-        onClick={ () => progress() }
-      >
-        {isInProgress() ? 'Continue Recipe' : 'Start Recipe'}
-      </button>
+      <Button
+        testId="start-recipe-btn"
+        onButtonClick={ () => progress() }
+        buttonClass="start-recipe-btn"
+        buttonName={ isInProgress() ? 'Continue Recipe' : 'Start Recipe' }
+      />
       <div>
         <Buttons
-          url={ url }
+          url={ location.pathname }
+          detailsMeals={ recipe && recipe.meals }
+          detailsDrinks={ recipe && recipe.drinks }
         />
       </div>
     </div>
@@ -171,8 +158,3 @@ function RecipeDetails({ recipeId, url }) {
 }
 
 export default RecipeDetails;
-
-RecipeDetails.propTypes = {
-  recipeId: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired,
-};

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import rockGlass from '../images/rockGlass.svg';
+import Button from '../components/Button';
 
 function Login({ history }) {
   const [email, setEmail] = useState('');
@@ -38,30 +39,30 @@ function Login({ history }) {
       >
         Glass
       </object>
-      <input
-        type="email"
-        placeholder="Email"
-        value={ email }
-        onChange={ ({ target }) => handleChange(target, setEmail) }
-        data-testid="email-input"
-      />
-      <br />
-      <input
-        type="password"
-        placeholder="Password"
-        value={ password }
-        onChange={ ({ target }) => handleChange(target, setPassword) }
-        data-testid="password-input"
-      />
-      <br />
-      <button
-        type="button"
-        data-testid="login-submit-btn"
-        onClick={ userLogin }
-        disabled={ isDisabled }
-      >
-        Enter
-      </button>
+      <form>
+        <input
+          type="email"
+          placeholder="Email"
+          value={ email }
+          onChange={ ({ target }) => handleChange(target, setEmail) }
+          data-testid="email-input"
+        />
+        <br />
+        <input
+          type="password"
+          placeholder="Password"
+          value={ password }
+          onChange={ ({ target }) => handleChange(target, setPassword) }
+          data-testid="password-input"
+        />
+        <br />
+        <Button
+          testId="login-submit-btn"
+          onButtonClick={ userLogin }
+          isButtonDisabled={ isDisabled }
+          buttonName="Enter"
+        />
+      </form>
     </div>
   );
 }
