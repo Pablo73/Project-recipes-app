@@ -1,14 +1,13 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import '../assets/css/Recipes.css';
 import clipboardCopy from 'clipboard-copy';
 import PropTypes from 'prop-types';
 import NotFavorite from '../images/whiteHeartIcon.svg';
-import RecipesContext from '../context/RecipesContext';
+// import RecipesContext from '../context/RecipesContext';
 import Favorite from '../images/blackHeartIcon.svg';
 import shareIcon from '../images/shareIcon.svg';
 
-export default function Buttons({ url }) {
-  const { detailsMeals, detailsDrinks } = useContext(RecipesContext);
+export default function Buttons({ url, detailsDrinks, detailsMeals }) {
   const [copy, setCopy] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -22,13 +21,13 @@ export default function Buttons({ url }) {
   }, []);
 
   useEffect(() => {
-    if (detailsMeals.length === 1) {
+    if (detailsMeals && detailsMeals.length === 1) {
       const meals = getLocal.filter((ele) => ele.type === 'meal');
       const isFavoriteMeals = meals.some((ele) => +ele.id === +detailsMeals[0].idMeal);
       setIsFavorite(isFavoriteMeals);
     }
 
-    if (detailsDrinks.length === 1) {
+    if (detailsDrinks && detailsDrinks.length === 1) {
       const drink = getLocal.filter((ele) => ele.type === 'drink');
       const isFavoriteDrinks = drink.some((ele) => +ele.id === +detailsDrinks[0].idDrink);
       setIsFavorite(isFavoriteDrinks);
@@ -36,7 +35,7 @@ export default function Buttons({ url }) {
   }, [detailsMeals, detailsDrinks, getLocal]);
 
   function favoriteClick() {
-    if (detailsDrinks.length === 1) {
+    if (detailsDrinks && detailsDrinks.length === 1) {
       const objDrinks = {
         id: detailsDrinks[0].idDrink,
         type: 'drink',
@@ -48,7 +47,7 @@ export default function Buttons({ url }) {
       };
       localStorage.setItem('favoriteRecipes', JSON.stringify([...getLocal, objDrinks]));
     }
-    if (detailsMeals.length === 1) {
+    if (detailsMeals && detailsMeals.length === 1) {
       const objMeals = {
         id: detailsMeals[0].idMeal,
         type: 'meal',

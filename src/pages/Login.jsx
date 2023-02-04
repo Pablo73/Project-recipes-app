@@ -39,28 +39,30 @@ function Login({ history }) {
       >
         Glass
       </object>
-      <input
-        type="email"
-        placeholder="Email"
-        value={ email }
-        onChange={ ({ target }) => handleChange(target, setEmail) }
-        data-testid="email-input"
-      />
-      <br />
-      <input
-        type="password"
-        placeholder="Password"
-        value={ password }
-        onChange={ ({ target }) => handleChange(target, setPassword) }
-        data-testid="password-input"
-      />
-      <br />
-      <Button
-        testId="login-submit-btn"
-        onButtonClick={ userLogin }
-        isButtonDisabled={ isDisabled }
-        buttonName="Enter"
-      />
+      <form>
+        <input
+          type="email"
+          placeholder="Email"
+          value={ email }
+          onChange={ ({ target }) => handleChange(target, setEmail) }
+          data-testid="email-input"
+        />
+        <br />
+        <input
+          type="password"
+          placeholder="Password"
+          value={ password }
+          onChange={ ({ target }) => handleChange(target, setPassword) }
+          data-testid="password-input"
+        />
+        <br />
+        <Button
+          testId="login-submit-btn"
+          onButtonClick={ userLogin }
+          isButtonDisabled={ isDisabled }
+          buttonName="Enter"
+        />
+      </form>
     </div>
   );
 }
