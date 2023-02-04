@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom';
 import RecipesContext from '../context/RecipesContext';
@@ -15,14 +15,15 @@ const eleven = 11;
 // import Buttons from './Buttons';
 
 function RecipeDetails({ recipeId, url }) {
-  const [detailsMeals, setDetailsMeals] = useState([]);
-  const [detailsDrinks, setDetailsDrinks] = useState([]);
+  const { detailsMeals, setDetailsMeals,
+    detailsDrinks, setDetailsDrinks,
+    setDrinksRecommendation, setMealsRecommendation,
+  } = useContext(RecipesContext);
   const isMealsLocation = url === `/meals/${recipeId}`;
   const isDrinksLocation = url === `/drinks/${recipeId}`;
   const { data: mealsRecommendations } = useFetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
   const { data: drinksRecommendations } = useFetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
 
-  const { setMealsRecommendation, setDrinksRecommendation } = useContext(RecipesContext);
   const location = useLocation();
   const history = useHistory();
   // console.log(detailsDrinks, detailsMeals);
@@ -162,8 +163,6 @@ function RecipeDetails({ recipeId, url }) {
       </button>
       <div>
         <Buttons
-          meals={ detailsMeals }
-          drinks={ detailsDrinks }
           url={ url }
         />
       </div>
