@@ -1,20 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-function IngredientInput({ testId, ingredient, onCheck, checked }) {
+function IngredientInput({ testId, ingredient }) {
+  const [stepDone, setStepDone] = useState(false);
+
   return (
     <label
       data-testid={ testId }
       htmlFor={ ingredient }
-      className={ checked ? 'step-done' : 'undone' }
+      className={ stepDone ? 'step-done' : 'undone' }
     >
       <input
         type="checkbox"
         id={ ingredient }
-        defaultChecked={ checked }
+        defaultChecked={ stepDone }
         name={ ingredient }
-        onChange={ onCheck }
         className="check"
+        onChange={ ({ target }) => setStepDone(target.checked) }
+        checked={ stepDone }
       />
       {ingredient}
     </label>
