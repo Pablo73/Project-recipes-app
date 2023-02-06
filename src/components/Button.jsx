@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import '../assets/css/Button.css';
 
 function Button({
   onButtonClick,
@@ -13,7 +14,7 @@ function Button({
     <button
       type="button"
       onClick={ onButtonClick }
-      className={ buttonClass }
+      className={ !buttonClass ? 'button-primary' : buttonClass }
       data-testid={ testId }
       disabled={ isButtonDisabled }
     >

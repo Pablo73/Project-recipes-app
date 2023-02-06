@@ -30,7 +30,7 @@ function Login({ history }) {
   };
 
   return (
-    <div className="meals">
+    <div className="recipe-app-login">
       <span className="logo">TRYBE</span>
       <object
         className="rocksGlass"
@@ -39,7 +39,7 @@ function Login({ history }) {
       >
         Glass
       </object>
-      <form>
+      <form className="form-class">
         <input
           type="email"
           placeholder="Email"
@@ -47,7 +47,6 @@ function Login({ history }) {
           onChange={ ({ target }) => handleChange(target, setEmail) }
           data-testid="email-input"
         />
-        <br />
         <input
           type="password"
           placeholder="Password"
@@ -55,12 +54,12 @@ function Login({ history }) {
           onChange={ ({ target }) => handleChange(target, setPassword) }
           data-testid="password-input"
         />
-        <br />
         <Button
           testId="login-submit-btn"
           onButtonClick={ userLogin }
           isButtonDisabled={ isDisabled }
           buttonName="Enter"
+          buttonClass="button-tertiary"
         />
       </form>
     </div>

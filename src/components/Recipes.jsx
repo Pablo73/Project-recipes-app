@@ -58,7 +58,6 @@ function Recipes() {
 
   return (
     <div>
-      <h1>Recipes</h1>
       <div className="filters">
         {categories && defineIfMealOrDrink(categories)
           .filter((el, index) => index < MAX_CATEGORIES)
@@ -79,7 +78,7 @@ function Recipes() {
           testId="All-category-filter"
         />
       </div>
-      <div className="recipe-card">
+      <div className="recipes-container">
         { loading && <p>{loading}</p> }
         { renderDrinks.length || renderMeals.length
           ? (isMealsLocation ? renderMeals : renderDrinks)

@@ -17,7 +17,6 @@ function IngredientInput({ testId, ingredient }) {
         name={ ingredient }
         className="check"
         onChange={ ({ target }) => setStepDone(target.checked) }
-        checked={ stepDone }
       />
       {ingredient}
     </label>

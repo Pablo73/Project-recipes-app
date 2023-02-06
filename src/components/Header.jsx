@@ -5,6 +5,7 @@ import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
 import SearchBar from './SearchBar';
 import Button from './Button';
+import '../assets/css/Header.css';
 
 function Header({ withSearchIcon, title }) {
   const history = useHistory();
@@ -13,21 +14,24 @@ function Header({ withSearchIcon, title }) {
   const toggleSearch = () => (search ? setSearch(false) : setSearch(true));
   return (
     <header>
-      <div>
-        <h1 data-testid="page-title">{ title }</h1>
-        <Button
-          onButtonClick={ () => history.push('/profile') }
-          buttonImg={ {
-            src: profileIcon,
-            alt: 'Profile icon',
-            testId: 'profile-top-btn',
-          } }
-        />
-      </div>
-      { withSearchIcon
+      <div className="app-header">
+        <h1 data-testid="page-title" className="title">{ title }</h1>
+        <div className="buttons-container">
+          <Button
+            onButtonClick={ () => history.push('/profile') }
+            buttonClass="button-icon"
+            buttonImg={ {
+              src: profileIcon,
+              alt: 'Profile icon',
+              testId: 'profile-top-btn',
+            } }
+          />
+
+          { withSearchIcon
       && (
         <Button
           testId="search-btn"
+          buttonClass="button-icon"
           onButtonClick={ toggleSearch }
           buttonImg={ {
             src: searchIcon,
@@ -35,8 +39,12 @@ function Header({ withSearchIcon, title }) {
             testId: 'search-top-btn',
           } }
         />)}
-      { search
+        </div>
+      </div>
+      <div>
+        { search
       && <SearchBar />}
+      </div>
     </header>
   );
 }

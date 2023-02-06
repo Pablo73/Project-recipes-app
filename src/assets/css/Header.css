@@ -1,0 +1,18 @@
+.app-header {
+  align-items: center;
+  background-color: var(--yellow);
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+}
+
+.title {
+  color: var(--red);
+  font-weight: 700;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 3rem;
+}

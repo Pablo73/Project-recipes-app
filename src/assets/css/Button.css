@@ -1,0 +1,82 @@
+.button-primary {
+  background-color: var(--orange);
+  border: 0;
+  border-radius: 6px;
+  color: var(--primary-bg-color);
+  font-weight: 500;
+  padding: 4px 8px;
+  width: 100%;
+}
+
+.button-secondary {
+  background-color: var(--primary-bg-color);
+  border: 2px solid var(--green);
+  border-radius: 6px;
+  color: var(--green);
+  font-weight: 600;
+  padding: 4px 8px;
+  width: 100%;
+}
+
+.button-tertiary {
+  background-color: var(--green);
+  border: 0;
+  border-radius: 6px;
+  color: var(--primary-bg-color);
+  font-weight: 600;
+  padding: 8px 10px;
+  width: 100%;
+}
+
+.button-primary:disabled, .button-secondary:disabled, .button-tertiary:disabled {
+  background-color: var(--gray);
+  border: 0;
+  border-radius: 6px;
+  color: var(--primary-bg-color);
+}
+
+.button-primary:active:enabled, .button-secondary:active:enabled {
+  transform: translateY(2px);
+  transition: 0.1s;
+}
+
+.button-tertiary:active:enabled {
+  transform: translateY(2px);
+  transition: 0.1s;
+}
+
+.button-tertiary:hover:enabled {
+  transform: translateY(-2px);
+  transition: 0.1s;
+}
+
+.filter-button {
+  background-color: var(--earthy);
+  border: 0;
+  border-radius: 4px;
+  color: var(--primary-bg-color);
+  font-weight: 600;
+  padding: 6px 8px;
+  width: fit-content;
+}
+
+.filter-button:hover {
+  opacity: 0.8;
+  text-decoration: dashed;
+  transform: translateY(-2px);
+  transition: 0.1s;
+}
+
+.button-icon {
+  background-color: transparent;
+  border: 0;
+  filter: invert(16%) sepia(92%) saturate(2719%)
+    hue-rotate(342deg) brightness(94%) contrast(108%);
+  width: fit-content;
+}
+
+.button-icon > img {
+  width: 40px;
+}
+
+@import url('./Colors.css') ;
