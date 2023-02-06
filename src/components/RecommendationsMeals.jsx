@@ -30,17 +30,19 @@ function RecommendationsMeals({ recommendation }) {
               data-testid={ `${index}-recommendation-card` }
               key={ `${index} = ${ele}` }
             >
-              <div className="recipe-rec">
-                <img
-                  className="d-block w-100"
-                  src={ ele.strMealThumb }
-                  alt="First slide"
-                />
+              <div>
                 <h3
                   data-testid={ `${index}-recommendation-title` }
                 >
                   { ele.strMeal}
                 </h3>
+                <img
+                  className="recipe-rec"
+                  src={ ele.strMealThumb }
+                  alt="First slide"
+                />
+                <br />
+                <br />
               </div>
             </Carousel.Item>))
         }
