@@ -5,6 +5,7 @@ function FilterButton({ categoryName, onFilterClick, testId }) {
     <button
       type="button"
       data-testid={ testId }
+      className="filter-button"
       onClick={ onFilterClick }
     >
       {categoryName}

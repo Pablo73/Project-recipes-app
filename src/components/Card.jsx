@@ -9,8 +9,8 @@ function Card({ index, image, name, onButtonClick }) {
       className="card"
       data-testid={ `${index}-recipe-card` }
     >
-      <img className="card" src={ image } alt="" data-testid={ `${index}-card-img` } />
-      <p data-testid={ `${index}-card-name` }>{name}</p>
+      <img src={ image } alt="" data-testid={ `${index}-card-img` } />
+      <span data-testid={ `${index}-card-name` } className="recipe-name">{name}</span>
     </button>
   );
 }
