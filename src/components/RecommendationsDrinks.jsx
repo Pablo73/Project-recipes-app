@@ -22,7 +22,7 @@ function RecommendationsDrinks({ recommendation }) {
   };
   return (data.length > 1
   && (
-    <div>
+    <div className="recipe-rec">
       <Carousel activeIndex={ indexs } onSelect={ handleSelect } variant="dark">
         {
           data.map((ele, index) => (
@@ -30,17 +30,19 @@ function RecommendationsDrinks({ recommendation }) {
               data-testid={ `${index}-recommendation-card` }
               key={ `${index} = ${ele}` }
             >
-              <div className="recipe-rec">
-                <img
-                  className="d-block w-100"
-                  src={ ele.strDrinkThumb }
-                  alt="First slide"
-                />
+              <div>
                 <h3
                   data-testid={ `${index}-recommendation-title` }
                 >
                   { ele.strDrink}
                 </h3>
+                <img
+                  className="recipe-rec"
+                  src={ ele.strDrinkThumb }
+                  alt="First slide"
+                />
+                <br />
+                <br />
               </div>
             </Carousel.Item>))
         }

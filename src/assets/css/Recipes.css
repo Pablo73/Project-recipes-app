@@ -44,6 +44,7 @@
 
 .recipe-rec {
   display: flex;
+  max-width: 200px;
 }
 
 .d-block {
